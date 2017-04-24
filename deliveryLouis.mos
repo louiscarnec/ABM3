@@ -1,0 +1,60 @@
+!@encoding CP1252
+model "Delivery"
+	uses "mmxprs"; !gain access to the Xpress-Optimizer solver
+	
+	declarations
+		citiesNum: integer
+		VNUM: integer
+		WAREHOUSENUM: integer
+	end-declarations	
+	
+	initializations from "dist.txt"
+		citiesNum
+		VNUM
+		WAREHOUSENUM
+	end-initializations	
+
+	declarations
+		cities = 1..citiesNum
+		cityNames : array(cities) of string
+		
+		DIST : array(cities, cities) of real
+		POP: array(cities) of real
+		
+		demand: array(cities) of real
+		
+		vehicules = 1..VNUM
+		VFIXEDCOST: array(vehicules) of real
+		VVARIABLECOST: array(vehicules) of real
+		
+		warehouses = 1..WAREHOUSENUM
+		WAREHOUSECOST: integer
+		
+		(!decision variables: given the shortest route from each city,
+		where should the warehouse(s) be located (one or two warehouses
+		taking into account cost of warehouse), which vehicule(s) should be 
+		purchased to be used for serving the shortest route taking into account
+		fixed costs of purchasing the vehicules and variables cost per km of driving?
+		Demand at location should be met!)
+		warehouseloc : array(warehouses) of mpvar
+		move : array(cities, cities) of mpvar !which route to take
+		vehicule: array(vehicules) of mpvar
+	end-declarations
+
+	initializations from "dist.txt"
+		POP
+		cityNames
+		DIST
+		VFIXEDCOST
+		VVARIABLECOST
+		WAREHOUSENUM
+		WAREHOUSECOST
+	end-initializations
+	
+	! Calculate demand per city as pop/100 plus random 
+	forall(i in cities) demand(i):=round((POP(i)/1000)+random*((POP(i)/100)))
+	
+	
+		
+
+end-model
