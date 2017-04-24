@@ -61,7 +61,7 @@ model "Delivery"
 		WAREHOUSECOST
 	end-initializations
 	
-	! Calculate demand per city as pop/100 plus random 
+	! Calculate demand per city as pop/1000 plus random 
 	forall(i in cities) demand(i):=round((POP(i)/1000)+random*((POP(i)/100)))
 	
 	
