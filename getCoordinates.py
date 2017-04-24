@@ -17,7 +17,9 @@ nodes = '/Users/Carnec/Desktop/Business_Analytics/analyticalbusinessmodelling/as
 with open(nodes, 'r') as f:
     csvreader = csv.reader(f,delimiter = ',')
     i = 0
+    list1 = []
     for row in csvreader:
+        list1.append(row[2])
         df.loc[i] = [row[1],row[3],row[4]]
         i+=1
         
@@ -32,14 +34,10 @@ i=0
 for i in range(size):
     distmatrix[0][i] = str(matrix[i][0])
 
-dfdist2 = pd.DataFrame(columns=[df['City']]) 
+dfdist2 = pd.DataFrame(index=[df['City']],columns=[df['City']]) 
+for j in range(len(matrix)):
+    for k in range(len(matrix)):
+        dfdist2[matrix[j][0]][matrix[k][0]] = vincenty((matrix[j][1],matrix[j][2]),(matrix[k][1],matrix[k][2])).km
   
-    
-    
-#l=0   
-#for j in range(len(matrix)):
-#    for k in range(len(matrix)):
-#        l = l+1
-##        print(vincenty((matrix[j][1],matrix[j][2]),(matrix[k][1],matrix[k][2])))
-#        dfdist.loc[l] = [matrix[j][0],matrix[k][0],vincenty((matrix[j][1],matrix[j][2]),(matrix[k][1],matrix[k][2])).km]
-#        
+np.savetxt(r'/Users/Carnec/Desktop/Business_Analytics/analyticalbusinessmodelling/assignment3/dist.txt', dfdist2.values, fmt='%d')
+dfdist2.index    
