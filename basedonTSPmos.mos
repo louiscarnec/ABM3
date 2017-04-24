@@ -13,6 +13,20 @@ model "Delivery"
 	uses "mmxprs"; !gain access to the Xpress-Optimizer solver
 	
 	declarations
+	NODES: set of string ! Set of nodes
+	EDGE: array(ARCSET:range) of record ! Arcs:
+		Source,Sink: string ! Source and sink of arc
+		Cost: real ! Cost coefficient
+		x: mpvar
+	end-record		!Suggestion; Add an edge name record
+end-declarations
+
+initializations from "distbis.txt"
+!initializations from "tsp_edge_case.txt"
+	EDGE(Source, Sink, Cost)
+end-initializations
+	
+	declarations
 		citiesNum: integer
 		VNUM: integer
 		WAREHOUSENUM: integer
@@ -28,7 +42,6 @@ model "Delivery"
 		cities = 1..citiesNum
 		cityNames : array(cities) of string
 		
-		DIST : array(cities, cities) of real
 		POP: array(cities) of real
 		
 		demand: array(cities) of real
@@ -54,7 +67,6 @@ model "Delivery"
 	initializations from "distlatest.txt"
 		POP
 		cityNames
-		DIST
 		VFIXEDCOST
 		VVARIABLECOST
 		WAREHOUSECOST
@@ -77,17 +89,33 @@ model "Delivery"
     	end-case
 
     	writeln("Problem status: ", status)
-    end-procedure
+end-procedure
+
+	procedure display_results
+	! Solution printing
+	 writeln("Tour length: ", getobjval)
 	
+	 writeln("Edges used:")
+	 forall(a in ARCSET)
+	  if getsol(EDGE(a).x) > 0 then
+	  	writeln("Connect ", EDGE(a).Source," to ",EDGE(a).Sink, " Cost: ",EDGE(a).Cost, " x is : ", getsol(EDGE(a).x)  ) 
+	  end-if
+	 writeln
+	end-procedure
+	
+	! Objective: sum of costs of edges
+	TSP:= sum(a in ARCSET ) EDGE(a).Cost*EDGE(a).x
+	
+		
 	! Calculate demand per city as pop/1000 plus random 
 	forall(i in cities) demand(i):=round((POP(i)/1000)+random*((POP(i)/100)))
 	
 	!TSP
-	dist := sum(i, j in cities | i <> j) DIST(i, j) * move(i, j)
-    forall(i, j in cities | i <> j) move(i, j) is_binary
+	!dist := sum(i, j in cities | i <> j) DIST(i, j) * move(i, j)
+    !forall(i, j in cities | i <> j) move(i, j) is_binary
     
     !Solve TSP
-    minimise(dist)
+    minimise(TSP)
 	printSta
 	writeln(getobjval)
 	!Objective Function: Minimise Cost of Delivery
