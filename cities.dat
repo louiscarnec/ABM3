@@ -1,0 +1,10 @@
+citiesNum: 6
+cityNames: ['Waterford City' 'Galway City' 'Limerick City' 'Cork City' 'Belfast City' 'Dublin City']
+distM: [
+0 172 112 102 279 133
+172 0 72 157 245 185
+112 72 0 86 277 175
+102 157 86 0 347 220
+279 245 277 347 0 152
+133 185 175 220 152 0
+];

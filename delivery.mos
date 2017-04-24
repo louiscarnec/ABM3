@@ -1,0 +1,72 @@
+model "Delivery Van"
+
+	uses "mmxprs"
+
+	!forward procedure printSol
+	forward procedure printSta
+
+	declarations
+		citiesNum: integer
+	end-declarations
+
+	!dataFile := "cities.dat"
+
+	dataFile := "cities.dat"
+
+	initializations from dataFile
+		citiesNum
+	end-initializations
+
+	declarations
+		cities = 1..citiesNum
+		cityNames : array(cities) of string
+		move : array(cities, cities) of mpvar
+		distM : array(cities, cities) of real
+		dist : linctr
+	end-declarations
+
+	initializations from dataFile
+		distM
+		cityNames
+	end-initializations
+
+	! Procdeure to check problem status was written by P. Carroll, copied from potter_goal_preempt.mos
+	procedure printSta
+		declarations
+			status : string
+		end-declarations
+
+		case getprobstat of
+			XPRS_OPT : status := "LP Optimum found"
+    		XPRS_UNF : status := "Unfinished"
+    		XPRS_INF : status := "Infeasible"
+    		XPRS_UNB : status := "Unbounded"
+    		XPRS_OTH : status := "Failed"
+    		else status := "???"
+    	end-case
+
+    	writeln("Poblem status: ", status)
+    end-procedure
+
+    forall(i, j in cities | i < j) distM(j, i) := distM(i, j)
+
+    ! Visti every city once
+    forall(j in cities) sum(i in cities| i<>j) move(i,j) = 1
+    forall(j in cities) sum(i in cities| i<>j) move(i,j) = 1
+
+    ! Objective
+    dist := sum(i, j in cities | i <> j) distM(i, j) * move(i, j)
+
+    forall(i, j in cities | i <> j) move(i, j) is_binary
+
+    procedure printSol
+    	writeln("Total distance covered: ", getobjval, " km")
+    end-procedure
+
+    ! Solve the problem
+    minimize(dist)
+    printSta
+    !printSol
+  
+
+end-model
