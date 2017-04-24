@@ -1,4 +1,14 @@
 !@encoding CP1252
+(! This problem is a mix of vehicule routing problem and a optimal mix problem. 
+We are interestred in finding the optimal location for one or two warehouses (decision),
+given that the warehouses can be located in any of the cities they supply (see cities). 
+We are also interested in finding the optimal mix of vehicules to be used from each location,
+not all vehicules have to be purchased (they have fixed and variable costs associated to them).
+Given the fact that the vehicules have different costs and capacities, each may better serve
+a particular route on which the distances and demands of the cities along the route differ.
+
+I understand there are a lot of permutations here; so if this is not possible we could simplify:
+one warehouse only, pick best location given mix of vehicules and what number of vehicules for which route!)
 model "Delivery"
 	uses "mmxprs"; !gain access to the Xpress-Optimizer solver
 	
