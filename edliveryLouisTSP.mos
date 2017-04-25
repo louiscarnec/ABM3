@@ -19,60 +19,13 @@ model "Delivery"
 		Cost: real ! Cost coefficient
 		x: mpvar
 	end-record		!Suggestion; Add an edge name record
-end-declarations
-
-initializations from "distbis.txt"
-!initializations from "tsp_edge_case.txt"
-	EDGE(Source, Sink, Cost)
-end-initializations
-	
-	declarations
-		citiesNum: integer
-		VNUM: integer
-		WAREHOUSENUM: integer
-	end-declarations 	
-	
-	initializations from "distlatest.txt"
-		citiesNum
-		VNUM
-		WAREHOUSENUM
-	end-initializations	
-
-	declarations
-		cities = 1..citiesNum
-		cityNames : array(cities) of string
-		
-		POP: array(cities) of real
-		
-		demand: array(cities) of real
-		
-		vehicules = 1..VNUM
-		VFIXEDCOST: array(vehicules) of real
-		VVARIABLECOST: array(vehicules) of real
-		
-		warehouses = 1..WAREHOUSENUM
-		WAREHOUSECOST: integer
-		
-		(!decision variables: given the shortest route from each city,
-		where should the warehouse(s) be located (one or two warehouses
-		taking into account cost of warehouse), which vehicule(s) should be 
-		purchased to be used for serving the shortest route taking into account
-		fixed costs of purchasing the vehicules and variables cost per km of driving?
-		Demand at location should be met!)
-		warehouseloc : array(warehouses) of mpvar
-		move : array(cities, cities) of mpvar !which route to take
-		vehicule: array(vehicules) of mpvar
 	end-declarations
 
-	initializations from "distlatest.txt"
-		POP
-		cityNames
-		VFIXEDCOST
-		VVARIABLECOST
-		WAREHOUSECOST
-		WAREHOUSENUM
+	initializations from "distbis.txt"
+	!initializations from "tsp_edge_case.txt"
+		EDGE(Source, Sink, Cost)
 	end-initializations
-	
+		
 		! Procdeure to check problem status was written by P. Carroll, copied from potter_goal_preempt.mos
 	procedure printSta
 		declarations
@@ -89,7 +42,7 @@ end-initializations
     	end-case
 
     	writeln("Problem status: ", status)
-end-procedure
+	end-procedure
 
 	procedure display_results
 	! Solution printing
@@ -103,20 +56,20 @@ end-procedure
 	 writeln
 	end-procedure
 	
+	!Calculate set of nodes
+	NODES:=union(a in ARCSET) {EDGE(a).Source, EDGE(a).Sink}
+	
+	!2-connected
+	forall(i in NODES)sum(a in ARCSET |i=EDGE(a).Source or i=EDGE(a).Sink)EDGE(a).x=2 
+	
 	! Objective: sum of costs of edges
 	TSP:= sum(a in ARCSET ) EDGE(a).Cost*EDGE(a).x
 	
-		
-	! Calculate demand per city as pop/1000 plus random 
-	forall(i in cities) demand(i):=round((POP(i)/1000)+random*((POP(i)/100)))
 	
-	!TSP
-	!dist := sum(i, j in cities | i <> j) DIST(i, j) * move(i, j)
-    !forall(i, j in cities | i <> j) move(i, j) is_binary
-    
     !Solve TSP
     minimise(TSP)
 	printSta
+	display_results
 	writeln(getobjval)
 	!Objective Function: Minimise Cost of Delivery
 	

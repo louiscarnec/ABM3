@@ -18,7 +18,7 @@ model "Delivery"
 		WAREHOUSENUM: integer
 	end-declarations 	
 	
-	initializations from "distlatest.txt"
+	initializations from "disttry.txt"
 		citiesNum
 		VNUM
 		WAREHOUSENUM
@@ -51,7 +51,7 @@ model "Delivery"
 		vehicule: array(vehicules) of mpvar
 	end-declarations
 
-	initializations from "distlatest.txt"
+	initializations from "disttry.txt"
 		POP
 		cityNames
 		DIST
@@ -77,21 +77,89 @@ model "Delivery"
     	end-case
 
     	writeln("Problem status: ", status)
-    end-procedure
+end-procedure
+
+procedure printSol
+	writeln("Edges Used:")
+		forall(i,j in cities)
+			if getsol(move(i,j)) > 0 then
+				writeln(cityNames(i)," to ",cityNames(j),". Solution: ",getsol(move(i,j)), ". Cost: ", DIST(i,j))
+			end-if	
+end-procedure
 	
 	! Calculate demand per city as pop/1000 plus random 
 	forall(i in cities) demand(i):=round((POP(i)/1000)+random*((POP(i)/100)))
+	
+	forall(i,j in cities | i<j) DIST(j,i):=DIST(i,j)
 	
 	!TSP
 	dist := sum(i, j in cities | i <> j) DIST(i, j) * move(i, j)
     forall(i, j in cities | i <> j) move(i, j) is_binary
     
+    !visit every node once
+    forall(i in cities) sum(j in cities | i<>j) move(i,j) = 1
+    forall(j in cities) sum(i in cities | i<>j) move(i,j) = 1 
+    
     !Solve TSP
     minimise(dist)
-	printSta
-	writeln(getobjval)
+	
 	!Objective Function: Minimise Cost of Delivery
 	
+	procedure break_subtour
+		declarations 
+			TOUR, SMALLEST, ALLCITIES: set of integer
+		end-declarations	
+				
+		forall(i in cities)
+			NEXTC(i):= integer(round(getsol(sum(j in cities) j*move(i,j) )))
+	
+		!Get subtour
+		TOUR:={}
+		first:=1
+		repeat
+			TOUR+={first}
+			first:=NEXTC(first)
+		until first=1
+		size:=getsize(TOUR)
 		
+		!Find smallest Subtour
+		if size < citiesNum then
+			SMALLEST := TOUR
+			if size>2 then
+				ALLCITIES:=TOUR
+				forall (i in cities) do
+					if(i not in ALLCITIES) then 
+						TOUR := {}
+						first := i
+						repeat
+							TOUR +={first}
+							first:=NEXTC(first)
+						until first=i
+						ALLCITIES += TOUR
+						if getsize(TOUR) < size then
+							SMALLEST := TOUR
+							size := getsize(SMALLEST)
+						end-if
+						if size=2 then
+							break
+						end-if
+					end-if
+				end-do
+			end-if
+			
+		!Add a subtour breaking constraint
+		sum(i in SMALLEST) move(i,NEXTC(i)) <= getsize(SMALLEST) - 1
+			
+		minimise(dist)
+		
+		break_subtour
+		
+		end-if
+	end-procedure	
+	
+	break_subtour
+	writeln("Total Cost: ", getobjval)
+	printSta
+	printSol
 
 end-model

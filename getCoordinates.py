@@ -25,7 +25,7 @@ with open(nodes, 'r') as f:
         
         
 matrix = df.as_matrix() 
-dfdist = pd.DataFrame(columns=('City1', 'City2', 'Distance')) 
+dfdist = pd.DataFrame(columns=('Edge','City1', 'City2', 'Distance')) 
 step = 0
 for j in range(len(matrix)):
     for k in range(len(matrix)):
@@ -33,10 +33,10 @@ for j in range(len(matrix)):
         if dist == float(0):
             pass
         else:
-            dfdist.loc[step]=[ matrix[j][0]), matrix[k][0], dist]
+            dfdist.loc[step]=[ int(step+1), matrix[j][0], matrix[k][0], dist]
             step +=1
   
-np.savetxt(r'/Users/Carnec/Desktop/Business_Analytics/analyticalbusinessmodelling/assignment3/distbis.txt', dfdist,delimiter=" ", fmt="%s %s %10.3f")
+#np.savetxt(r'/Users/Carnec/Desktop/Business_Analytics/analyticalbusinessmodelling/assignment3/distbis.txt', dfdist,delimiter=" ", fmt="(%i) ['%s' '%s' %10.3f]")
 
 size = len(matrix)
 s = (size+1,size+1)
