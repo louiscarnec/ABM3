@@ -1,14 +1,14 @@
 !@encoding CP1252
-(! This problem is a mix of vehicule routing problem and a optimal mix problem. 
+(! This problem is a mix of vehicle routing problem and a optimal mix problem. 
 We are interestred in finding the optimal location for one or two warehouses (decision),
 given that the warehouses can be located in any of the cities they supply (see cities). 
-We are also interested in finding the optimal mix of vehicules to be used from each location,
-not all vehicules have to be purchased (they have fixed and variable costs associated to them).
-Given the fact that the vehicules have different costs and capacities, each may better serve
+We are also interested in finding the optimal mix of vehicles to be used from each location,
+not all vehicles have to be purchased (they have fixed and variable costs associated to them).
+Given the fact that the vehicles have different costs and capacities, each may better serve
 a particular route on which the distances and demands of the cities along the route differ.
 
 I understand there are a lot of permutations here; so if this is not possible we could simplify:
-one warehouse only, pick best location given mix of vehicules and what number of vehicules for which route!)
+one warehouse only, pick best location given mix of vehicles and what number of vehicles for which route!)
 model "Delivery"
 	uses "mmxprs"; !gain access to the Xpress-Optimizer solver
 	
@@ -16,15 +16,21 @@ model "Delivery"
 		citiesNum: integer
 		VNUM: integer
 		WAREHOUSENUM: integer
+		VFIXEDCOST: integer
 	end-declarations 	
 	
 	initializations from "disttry.txt"
 		citiesNum
 		VNUM
 		WAREHOUSENUM
+		VFIXEDCOST
 	end-initializations	
 
 	declarations
+		TRIPS = 4
+		trips = 1..TRIPS
+		
+		
 		cities = 1..citiesNum
 		cityNames : array(cities) of string
 		
@@ -33,22 +39,21 @@ model "Delivery"
 		
 		demand: array(cities) of real
 		
-		vehicules = 1..VNUM
-		VFIXEDCOST: array(vehicules) of real
-		VVARIABLECOST: array(vehicules) of real
+		vehicles = 1..VNUM
+		VCAPACITY: array(vehicles) of real
 		
 		warehouses = 1..WAREHOUSENUM
 		WAREHOUSECOST: integer
 		
 		(!decision variables: given the shortest route from each city,
 		where should the warehouse(s) be located (one or two warehouses
-		taking into account cost of warehouse), which vehicule(s) should be 
+		taking into account cost of warehouse), which vehicle(s) should be 
 		purchased to be used for serving the shortest route taking into account
-		fixed costs of purchasing the vehicules and variables cost per km of driving?
+		fixed costs of purchasing the vehicles and variables cost per km of driving?
 		Demand at location should be met!)
-		warehouseloc : array(warehouses) of mpvar
+		
 		move : array(cities, cities) of mpvar !which route to take
-		vehicule: array(vehicules) of mpvar
+		m : array(vehicles) of mpvar
 	end-declarations
 
 	initializations from "disttry.txt"
@@ -56,9 +61,9 @@ model "Delivery"
 		cityNames
 		DIST
 		VFIXEDCOST
-		VVARIABLECOST
 		WAREHOUSECOST
 		WAREHOUSENUM
+		VCAPACITY
 	end-initializations
 	
 		! Procdeure to check problem status was written by P. Carroll, copied from potter_goal_preempt.mos
@@ -93,15 +98,27 @@ end-procedure
 	forall(i,j in cities | i<j) DIST(j,i):=DIST(i,j)
 	
 	!TSP
-	dist := sum(i, j in cities | i <> j) DIST(i, j) * move(i, j)
+	dist := sum(i, j in cities | i <> j) DIST(i,j)*move(i,j) + VNUM*VFIXEDCOST
     forall(i, j in cities | i <> j) move(i, j) is_binary
     
+    !All Outgoing nodes at most number of vehicles/trips
+    sum(j in cities | j>1) move(1,j) = VNUM
+    ! All Incoming nodes at most number of vehicles/trips
+    sum(j in cities | j>1) move(j,1) = VNUM
+    
+    forall(j in cities)sum(i in cities) move(i,j)= citiesNum
+    forall(i in cities)sum(j in cities) move(j,i)= citiesNum
+    
+
+    
     !visit every node once
-    forall(i in cities) sum(j in cities | i<>j) move(i,j) = 1
-    forall(j in cities) sum(i in cities | i<>j) move(i,j) = 1 
+    !forall(i in cities) sum(j in cities | i<>j) move(i,j) = 1
+    !forall(j in cities) sum(i in cities | i<>j) move(i,j) = 1 
     
     !Solve TSP
     minimise(dist)
+    printSta
+    printSol
 	
 	!Objective Function: Minimise Cost of Delivery
 	
@@ -161,5 +178,4 @@ end-procedure
 	writeln("Total Cost: ", getobjval)
 	printSta
 	printSol
-
 end-model

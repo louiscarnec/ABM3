@@ -25,6 +25,7 @@ with open(nodes, 'r') as f:
         
         
 matrix = df.as_matrix() 
+np.triu(matrix)
 dfdist = pd.DataFrame(columns=('Edge','City1', 'City2', 'Distance')) 
 step = 0
 for j in range(len(matrix)):
@@ -48,6 +49,8 @@ dfdist2 = pd.DataFrame(index=[df['City']],columns=[df['City']])
 for j in range(len(matrix)):
     for k in range(len(matrix)):
         dfdist2[matrix[j][0]][matrix[k][0]] = vincenty((matrix[j][1],matrix[j][2]),(matrix[k][1],matrix[k][2])).km
-  
+matrix = dfdist2.as_matrix()  
+np.triu(matrix).as_df()
+
 #np.savetxt(r'/Users/Carnec/Desktop/Business_Analytics/analyticalbusinessmodelling/assignment3/dist.txt', dfdist2.values, fmt='%d')
 dfdist2.index    
