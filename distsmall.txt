@@ -1,0 +1,26 @@
+citiesNum: 5
+
+VNUM: 2
+
+VFIXEDCOST: 2000
+
+POP: [1027900
+ 195400
+ 85700
+ 68600
+ 48300]
+
+cityNames: [‘Dublin’ ‘Cork’ ‘Limerick’ ‘Galway’ ‘Waterford’ ]
+
+DIST: 
+[0 218 175 187 133 
+218 0 86 158 100 
+175 86 0 73 111 
+187 158 73 0 172 
+133 100 111 172 0
+]
+
+
+VCAPACITY: 1500
+;
+

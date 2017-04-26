@@ -1,8 +1,6 @@
-citiesNum: 20
+citiesNum: 17
 
 VNUM: 4
-
-WAREHOUSENUM: 2
 
 VFIXEDCOST: 2000
 
@@ -23,13 +21,11 @@ POP: [1027900
  18300
  18100
  17200
- 17200
- 17000
- 16600]
+ ]
 
 cityNames: [‘Dublin’ ‘Cork’ ‘Limerick’ ‘Galway’ ‘Waterford’ ‘Dundalk’ ‘Bray’
        ‘Drogheda’ ‘Swords’ ‘Tralee’ ‘Kilkenny’ ‘Ennis’ ‘Sligo’ ‘Athlone’
-       ‘Wexford’ ‘Naas’ ‘Newbridge’ ‘Clonmel’ ‘Carlow’ ‘Navan’]
+       ‘Wexford’ ‘Naas’ ‘Newbridge’ ]
 
 DIST: 
 [(1 2) 218 175 187 133 77 16 44 13 261 100 190 180 113 111 31 40 146 70 46
@@ -48,12 +44,8 @@ DIST:
 (14 15) 155 87 81 119 94 87
 (15 16) 98 95 83 63 147
 (16 17) 9 118 45 48
-(17 18) 109 38 53
-(18 19)75 160
-(19 20) 92
 ]
 
-WAREHOUSECOST: 100000 
 
-VCAPACITY: [4000 3500 1000 500];
+VCAPACITY: 1500;
 

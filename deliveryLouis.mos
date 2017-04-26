@@ -92,6 +92,10 @@ procedure printSol
 			end-if	
 end-procedure
 	
+	forall(i,j in cities)
+		if getsol(move(1,j))>0 then 
+		writeln("j",j)
+		end-if
 	! Calculate demand per city as pop/1000 plus random 
 	forall(i in cities) demand(i):=round((POP(i)/1000)+random*((POP(i)/100)))
 	
@@ -106,19 +110,16 @@ end-procedure
     ! All Incoming nodes at most number of vehicles/trips
     sum(j in cities | j>1) move(j,1) = VNUM
     
-    forall(j in cities)sum(i in cities) move(i,j)= citiesNum
-    forall(i in cities)sum(j in cities) move(j,i)= citiesNum
+    !Visit every city once
+    forall(j in cities | j>1) sum(i in cities | i<>j) move(i, j) = 1
+    forall(i in cities | i>1) sum(j in cities | i<>j) move(i, j) = 1
     
-
-    
-    !visit every node once
-    !forall(i in cities) sum(j in cities | i<>j) move(i,j) = 1
-    !forall(j in cities) sum(i in cities | i<>j) move(i,j) = 1 
     
     !Solve TSP
     minimise(dist)
     printSta
     printSol
+	
 	
 	!Objective Function: Minimise Cost of Delivery
 	
@@ -127,10 +128,12 @@ end-procedure
 			TOUR, SMALLEST, ALLCITIES: set of integer
 		end-declarations	
 				
-		forall(i in cities)
-			NEXTC(i):= integer(round(getsol(sum(j in cities) j*move(i,j) )))
-	
-		!Get subtour
+				
+		forall(i in cities)NEXTC(i):= integer(round(getsol(sum(j in cities) j*move(i,j) )))
+		writeln(NEXTC)
+		
+		
+		!Get subtour that contains city 1
 		TOUR:={}
 		first:=1
 		repeat
@@ -178,4 +181,6 @@ end-procedure
 	writeln("Total Cost: ", getobjval)
 	printSta
 	printSol
+	
+	
 end-model
