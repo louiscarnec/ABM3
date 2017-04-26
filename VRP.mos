@@ -8,7 +8,7 @@ model "VRP"
 		VFIXEDCOST: integer
 	end-declarations 	
 	
-	initializations from "disttry.txt"
+	initializations from "distsmall.txt"
 		citiesNum
 		VNUM
 		VFIXEDCOST
@@ -25,10 +25,15 @@ model "VRP"
 		VCAPACITY: integer
 		move : array(cities, cities) of mpvar
 		totalq : array(citiestovisit) of mpvar
+		totaldist: array(citiestovisit) of mpvar
 		totaldemand:real
+		trips: integer
+		quantitydelivered: array(1..10) of real
+		distancecovered: array(1..10) of real
+		numberofstops: array(1..10) of integer
 	end-declarations
 
-	initializations from "disttry.txt"
+	initializations from "distsmall.txt"
 		POP
 		cityNames
 		DIST
@@ -52,14 +57,19 @@ model "VRP"
 	!if i first city i tour: total quantity delivered = demand from city
 	forall(i in citiestovisit) totalq(i) <= VCAPACITY + (demand(i) - VCAPACITY)*move(1,i)
 	
-	!
+	!strictly increasing quant
 	forall(i,j in citiestovisit | i<>j) totalq(j) >= totalq(i) + demand(j) - VCAPACITY + VCAPACITY*move(i,j) + (VCAPACITY - demand(j) - demand(i))*move(j,i)
 	
+	!upper and lowe bound on quantity
 	forall(i in citiestovisit) do
 		totalq(i) <= VCAPACITY
 		totalq(i) >= demand(i)
 	end-do
 	
+	!Trip cannot be longer than some time value
+	
+	
+	!decision variable is binary
 	forall(i,j in cities | i<>j) move(i,j) is_binary
 	
 	 declarations
@@ -71,21 +81,66 @@ model "VRP"
 			end-do
 	
 	minimise(dist)
-	
+	writeln("---")
 	 writeln("Total distance: ", getobjval)
  forall(i in citiestovisit)
   if(getsol(move(1,i))>0) then
    ct:=demand(i)
-   writeln(cityNames(1), " -> ", cityNames(i))
+   distancesub:=DIST(1,i)
+   stops:=1
+   writeln(cityNames(1), " -> ", cityNames(i), " Distance: ", DIST(1,i))
    p:=i
    while(p<>1) do
     n:= integer(round(sum(j in cities) j*getsol(move(p,j))))
-    writeln(cityNames(p), " -> ", cityNames(n))
+    distpn:=DIST(p,n)
+    if (distpn=0)then
+    	distpn:=DIST(n,p)
+    end-if	
+    writeln(cityNames(p), " -> ", cityNames(n), " Distance:" , distpn)
     ct+=demand(n)
+    distancesub+=distpn
     p:=n
+    stops+=1
    end-do
    writeln("Quantity delivered: ", ct)
+   writeln("Distance Covered: ", distancesub)
+   writeln("Number of Stops in trip: ", stops)
+   writeln("---TRIP---")
+   trips+=1
+   quantitydelivered(trips):= ct
+   distancecovered(trips) := distancesub
+   numberstops(trips) := stops
   end-if
 
+	!Choose best vehicle for the trip
+	procedure getBestVehicle
+		declarations
+			vehiclefortrip: array(vehicles) of mpvar
+			COST: array(1..trips) of real
+			VCOSTPERKM: array(vehicles) of real
+			VCOSTPERSTOP: array(vehicles) of real
+			
+		end-declarations
+		
+		initializations from 'distsmall.txt'
+			VCOSTPERKM
+			VCOSTPERSTOP
+		end-initializations	
+			
+			!Objective Function
+			costoftravel := sum(i in vehicles, j in 1..trips) vehiclefortrip(i)*(VCOSTPERKM(i)*distancecovered(j)+VCOSTPERKM(i)*numberstops(j))
+			
+			!for n number of trips there must be n vehicles
+			sum(i in 1..trips)vehiclefortrip(i)=trips
+			
+			!mpvar is binary
+			forall(i in vehicles) vehiclefortrip(i) is_binary
+			
+			minimize(costoftravel)
+			writeln(getsol(vehiclefortrip(1)),getsol(vehiclefortrip(2)),getsol(vehiclefortrip(3)),getsol(vehiclefortrip(4)))
+			writeln("Cost of Transport: ", getobjval)
+	end-procedure	
+	
+	getBestVehicle
 		
 end-model

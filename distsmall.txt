@@ -1,6 +1,6 @@
 citiesNum: 5
 
-VNUM: 2
+VNUM: 4
 
 VFIXEDCOST: 2000
 
@@ -22,5 +22,10 @@ DIST:
 
 
 VCAPACITY: 1500
+
+
+VCOSTPERKM: [0.1 0.1 0.1 0.1]
+
+VCOSTPERSTOP: [5 4 3 2]
 ;
 
