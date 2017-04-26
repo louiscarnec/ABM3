@@ -25,12 +25,17 @@ model "VRP"
 		VCAPACITY: integer
 		move : array(cities, cities) of mpvar
 		totalq : array(citiestovisit) of mpvar
+		totaltime:array(citiestovisit) of mpvar
 		totaldist: array(citiestovisit) of mpvar
 		totaldemand:real
 		trips: integer
 		quantitydelivered: array(1..10) of real
 		distancecovered: array(1..10) of real
 		numberofstops: array(1..10) of integer
+		timebefore = array(citiestovisit)of real
+		disttotime: array(cities,cities) of real
+		TIMECAPACITY = 100
+		KMH=80
 	end-declarations
 
 	initializations from "distsmall.txt"
@@ -54,6 +59,8 @@ model "VRP"
 	forall(j in citiestovisit) sum(i in cities | i<>j) move(i,j)=1
 	forall(i in citiestovisit) sum(j in cities | i<>j) move(i,j)=1
 	
+	
+
 	!if i first city i tour: total quantity delivered = demand from city
 	forall(i in citiestovisit) totalq(i) <= VCAPACITY + (demand(i) - VCAPACITY)*move(1,i)
 	
@@ -61,17 +68,26 @@ model "VRP"
 	forall(i,j in citiestovisit | i<>j) totalq(j) >= totalq(i) + demand(j) - VCAPACITY + VCAPACITY*move(i,j) + (VCAPACITY - demand(j) - demand(i))*move(j,i)
 	
 	!Number of times pass through the depot / NUMBER OF TRIPS = 4
-	sum(i in citiestovisit) move(i,1)=4
+	!sum(i in citiestovisit) move(i,1)=2
 	
-	
-	!upper and lowe bound on quantity
+	!upper and lower bound on quantity
 	forall(i in citiestovisit) do
 		totalq(i) <= VCAPACITY
 		totalq(i) >= demand(i)
 	end-do
 	
-	!Max number of stops
-	!sum(i in cities,j in cities)move(i,j)<=8
+	(!
+	! if i first city in tour: total time = distance to city
+	forall(i in citiestovisit) totaltime(i) <= TIMECAPACITY + (DIST(1,i)*move(1,i))/KMH
+	
+	
+	!strictly increasing time
+	forall(i,j in citiestovisit |i<>j) totaltime(j) >= totaltime(i) + DIST(i,j)/KMH - TIMECAPACITY + TIMECAPACITY*move(i,j) + (TIMECAPACITY - (DIST(j,i)/KMH))*move(j,i)
+	
+	!upper bound time
+	forall(i in citiestovisit)do
+		totaltime(i) <= TIMECAPACITY
+		!)
 	
 	!decision variable is binary
 	forall(i,j in cities | i<>j) move(i,j) is_binary
@@ -85,38 +101,53 @@ model "VRP"
            setmodcut(modcut(i))
 			end-do
 	!)
-	minimise(dist)
+	
+	procedure printTrips
 	writeln("---")
 	 writeln("Total distance: ", getobjval)
- forall(i in citiestovisit)
-  if(getsol(move(1,i))>0) then
-   ct:=demand(i)
-   distancesub:=DIST(1,i)
-   stops:=1
-   writeln(cityNames(1), " -> ", cityNames(i), " Distance: ", DIST(1,i))
-   p:=i
-   while(p<>1) do
-    n:= integer(round(sum(j in cities) j*getsol(move(p,j))))
-    distpn:=DIST(p,n)
-    if (distpn=0)then
-    	distpn:=DIST(n,p)
-    end-if	
-    writeln(cityNames(p), " -> ", cityNames(n), " Distance:" , distpn)
-    ct+=demand(n)
-    distancesub+=distpn
-    p:=n
-    stops+=1
-   end-do
-   writeln("Quantity delivered: ", ct)
-   writeln("Distance Covered: ", distancesub)
-   writeln("Number of Stops in trip: ", stops)
-   writeln("---TRIP---")
-   trips+=1
-   quantitydelivered(trips):= ct
-   distancecovered(trips) := distancesub
-   numberstops(trips) := stops
-  end-if
-
+	 forall(i in citiestovisit)
+	  if(getsol(move(1,i))>0) then
+	   ct:=demand(i)
+	   distancesub:=DIST(1,i)
+	   stops:=1
+	   writeln(cityNames(1), " -> ", cityNames(i), " Distance: ", DIST(1,i))
+	   p:=i
+	   while(p<>1) do
+	    n:= integer(round(sum(j in cities) j*getsol(move(p,j))))
+	    distpn:=DIST(p,n)
+	    if (distpn=0)then
+	    	distpn:=DIST(n,p)
+	    end-if	
+	    writeln(cityNames(p), " -> ", cityNames(n), " Distance:" , distpn)
+	    ct+=demand(n)
+	    distancesub+=distpn
+	    p:=n
+	    stops+=1
+	   end-do
+	   writeln("Quantity delivered: ", ct)
+	   writeln("Distance Covered: ", distancesub)
+	   writeln("Number of Stops in trip: ", stops)
+	   writeln("---TRIP---")
+	   trips+=1
+	   quantitydelivered(trips):= ct
+	   distancecovered(trips) := distancesub
+	   numberstops(trips) := stops
+	  end-if
+	end-procedure
+	
+	
+	!minimise(dist)
+	while(getobjval = 0) do
+		minimise(dist)
+	end-do	
+	printTrips
+	
+	!result:=0
+	!forall(i in 1..2)
+		!result += getobjval
+	
+	!setparam("XPRS_heurstrategy",0)
+(!
 	!Choose best vehicle for each trip - NOT WORKING!!!!!!!111
 	procedure getBestVehicle
 		declarations
@@ -144,8 +175,8 @@ model "VRP"
 			minimize(costoftravel)
 			writeln(getsol(vehiclefortrip(1)),getsol(vehiclefortrip(2)),getsol(vehiclefortrip(3)),getsol(vehiclefortrip(4)))
 			writeln("Cost of Transport: ", getobjval)
-	end-procedure	
+	end-procedure	!)
 	
-	getBestVehicle
+	!getBestVehicle
 		
 end-model

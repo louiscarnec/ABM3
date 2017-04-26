@@ -22,7 +22,6 @@ model "Delivery"
 	initializations from "disttry.txt"
 		citiesNum
 		VNUM
-		WAREHOUSENUM
 		VFIXEDCOST
 	end-initializations	
 
@@ -42,7 +41,7 @@ model "Delivery"
 		vehicles = 1..VNUM
 		VCAPACITY: array(vehicles) of real
 		
-		warehouses = 1..WAREHOUSENUM
+	
 		WAREHOUSECOST: integer
 		
 		(!decision variables: given the shortest route from each city,
@@ -61,8 +60,6 @@ model "Delivery"
 		cityNames
 		DIST
 		VFIXEDCOST
-		WAREHOUSECOST
-		WAREHOUSENUM
 		VCAPACITY
 	end-initializations
 	
