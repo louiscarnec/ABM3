@@ -60,26 +60,31 @@ model "VRP"
 	!strictly increasing quant
 	forall(i,j in citiestovisit | i<>j) totalq(j) >= totalq(i) + demand(j) - VCAPACITY + VCAPACITY*move(i,j) + (VCAPACITY - demand(j) - demand(i))*move(j,i)
 	
+	!Number of times pass through the depot / NUMBER OF TRIPS = 4
+	sum(i in citiestovisit) move(i,1)=4
+	
+	
 	!upper and lowe bound on quantity
 	forall(i in citiestovisit) do
 		totalq(i) <= VCAPACITY
 		totalq(i) >= demand(i)
 	end-do
 	
-	!Trip cannot be longer than some time value
-	
+	!Max number of stops
+	!sum(i in cities,j in cities)move(i,j)<=8
 	
 	!decision variable is binary
 	forall(i,j in cities | i<>j) move(i,j) is_binary
 	
+	(!
 	 declarations
            modcut: array(citiestovisit) of linctr
-          end-declarations
+     end-declarations
           forall(i in citiestovisit) do
            modcut(i):= totalq(i) >= demand(i) + sum(j in cities| i<>j) demand(j)*move(j,i)
            setmodcut(modcut(i))
 			end-do
-	
+	!)
 	minimise(dist)
 	writeln("---")
 	 writeln("Total distance: ", getobjval)
@@ -112,7 +117,7 @@ model "VRP"
    numberstops(trips) := stops
   end-if
 
-	!Choose best vehicle for the trip
+	!Choose best vehicle for each trip - NOT WORKING!!!!!!!111
 	procedure getBestVehicle
 		declarations
 			vehiclefortrip: array(vehicles) of mpvar
@@ -128,7 +133,7 @@ model "VRP"
 		end-initializations	
 			
 			!Objective Function
-			costoftravel := sum(i in vehicles, j in 1..trips) vehiclefortrip(i)*(VCOSTPERKM(i)*distancecovered(j)+VCOSTPERKM(i)*numberstops(j))
+			costoftravel := sum(j in 1..trips, i in vehicles) vehiclefortrip(i)*(VCOSTPERKM(i)*distancecovered(j)+VCOSTPERKM(i)*numberstops(j))
 			
 			!for n number of trips there must be n vehicles
 			sum(i in 1..trips)vehiclefortrip(i)=trips
