@@ -123,6 +123,7 @@ end-procedure
 	procedure break_subtour
 		declarations 
 			TOUR, SMALLEST, ALLCITIES: set of integer
+			x: array(trips) of integer
 		end-declarations	
 				
 				
@@ -132,6 +133,12 @@ end-procedure
 		
 		!Get subtour that contains city 1
 		TOUR:={}
+		
+		forall(i in trips)
+			if move(1,i)=1 then
+				x(i):=i
+			end-if	
+		
 		first:=1
 		repeat
 			TOUR+={first}

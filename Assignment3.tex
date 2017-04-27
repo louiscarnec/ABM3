@@ -1,0 +1,308 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{lscape}
+\usepackage{capt-of}
+\usepackage{lmodern,textcomp}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage{mathtools}
+\usepackage{subcaption}
+\usepackage{url}
+\usepackage{footnote}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usepackage{enumerate}
+\usepackage{listings}
+\usepackage{siunitx}
+\usepackage{eurosym}
+\usetikzlibrary{quotes,angles,positioning}
+\usepackage{standalone}
+\usepackage{multirow}
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} 
+\pagestyle{fancy}
+\lhead{}
+\rhead{Louis Carnec \\ 15204934}
+\renewcommand{\headrulewidth}{0pt}
+\setlength\parindent{0pt}
+\usepackage{amstext} % for \text
+\DeclareRobustCommand{\officialeuro}{%
+  \ifmmode\expandafter\text\fi
+  {\fontencoding{U}\fontfamily{eurosym}\selectfont e}}
+\begin{document}
+
+
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Analytical Business Modelling Assignment 3}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Students:}\\
+Louis \textsc{Carnec}\\ % Your name
+Vijay \textsc{Katta}\\ % Your name
+Adedayo \textsc{Adelowokan}
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Student \#:} \\
+15204934\\ % Supervisor's Name
+15202724\\
+15204151
+\end{flushright}
+\end{minipage}\\[4cm]
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+ 
+%----------------------------------------------------------------------------------------
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+\section{Introduction}
+
+
+\section{Application: Goods Delivery}
+
+The case study problem we have tackled is the delivery of goods throughout Irish cities and town from a single depot location based in Dublin given time window constraints on delivery times. A single vehicle, with a given carrying capacity, must deliver goods to all towns/nodes in the graph and meet each town's demand for goods. Given the fact that each vehicle has a given capacity, the transportation vehicle can only take so many goods and must therefore revert to the depot. If the vehicle reaches a town after 5pm, it must wait overnight and incur fixed overnight charges.
+
+Our problem involves finding the optimal route for the vehicle so that costs are minimised, where costs incurred stem from the distance covered by the vehicle and any overnight fixed charges incurred. This is a Vehicle Routing Problem (VRP), a variant of the Travelling Salesman Problem for which the \textit{order} of nodes in a graph to be visited must be optimised to find the tour with lowest travelled distance. 
+
+In his chapter on vehicle routing, Cordeau warns that due to high variability of problems in practice, the objective function and constraints of VRP are highly variable and thus must be tailored to each problem \cite{cordeau2007vehicle}.
+\\\\
+We initially attempted to solve a slightly different version of the problem solved here and modelled in Section 3; the `Capacitated Vehicle Routing Problem' \cite{toth2002models}. In this problem multiple vehicles are used at the same time to deliver goods around the symmetric undirected graph. In our implementation we followed closely the implementation used in section 11.5 of  `Applications of optimization with Xpress-MP'  \cite{gueret1999applications} for planning flights. The model is similar to the one presented in this report, distance is minimised given that each node/city must only be visited once. To account for the fact that $n$ trips can be made by $n$ vehicles, an additional constraint is added to stipulate that the depot must have $n$ incoming edges. Optimising the model, we were able to create the subtours for the graph to be `broken' into $n$ subtours. Having Dublin as the depot, the $n$ closest cities to Dublin were used as outgoing/incoming nodes to be attached to the $n$ subtours. When it came to making subtour eliminiation procedure into $n$ subtours, we were unable to sreate a function which would allow us to form the subtour containing the depot to then break the smaller subtours.
+
+
+
+\subsection{Literature}
+
+
+
+\subsubsection{VRP and complexity}
+
+
+
+\subsubsection{How similar your problem is well-known solved cases}
+
+\section{Mathematical Programming Model Formulation}
+
+The formulation proposed in this report is an extension of the formulation proposed in the `Applications of optimization with Xpress-MP' book in section 10.4 \cite{gueret1999applications}. The formulation is extended by; adding a general time window which applied to all cities within the graph (as opposed to individualised time windows), an additional constraint to specify the number of times the vehicle can return to the depot, an alternative subtour breaking constraint and lastly an uncertainty parameter.
+
+\subsection{Assumptions}
+Several assumptions are made in modelling this VRP problem.
+
+We assume that the time taken to travel from one city to another is linearly proportional to the distance by air between the two points, as such in the mathematical formulation of the model distance, rather than time is minimised. It is also assumed that no time is lost at each stop point, that is the time taken for the route is equal to the time taken proportional to the distance. For a route of length x, the time taken is the same whether there were 5 stops or 10 stops along the route. 
+
+
+\subsection{Objective Function}
+
+The objective function we wish to minimise is the cost of the route, where the distance covered over the route is directly proportional to the distance. 
+
+\begin{equation}\label{eq1}
+\textrm{Minimise} \quad \sum\limits_{i \in cities} \sum\limits_{j \in cities, i \neq j} d_{i,j} p_{i,j}
+\end{equation}
+
+\subsection{Constraints}
+
+\begin{equation}\label{eq2}
+\sum\limits_{i \in cities} p_{i,j} = 1 \quad , \forall j \in cities
+\end{equation}
+
+\begin{equation}\label{eq3}
+\sum\limits_{j \in cities} p_{i,j} = 1 \quad , \forall i \in cities
+\end{equation}
+
+\begin{equation}\label{eq4}
+p_{i,j} \in{\{0,1\}} \quad , \forall i,j \in cities\quad, where \quad i \neq j
+\end{equation}
+
+\subsubsection{Alternative Subtour Breaking Constraint: Increasing Quantity }
+\begin{equation}\label{Q}
+q_{i} \leq C + (D_{i} - C) \times  p _{1,i} \quad, \forall i \in cities
+\end{equation}
+
+\begin{equation}\label{incQ}
+q_{j} \geq q_{i} + D_{i} - C + V*p_{i,j}  + (C-D_{j}-D_{i})*p_{j,i}
+\end{equation}
+
+\begin{equation}
+q_{i} <= C \quad, \forall i
+\end{equation}
+
+\begin{equation}
+q_{i} >= D_{i} \quad, \forall i
+\end{equation}
+
+
+\subsubsection{Alternative Subtour Breaking Constraint: Increasing Time/Distance}
+\begin{equation}\label{T}
+t_{i} \leq T + (D_{i} - C) \times  p _{1,i} \quad, \forall i \in cities
+\end{equation}
+
+\begin{equation}\label{incT}
+q_{j} \geq q_{i} + D_{i} - C + V*p_{i,j}  + (C-D_{j}-D_{i})*p_{j,i}
+\end{equation}
+
+\begin{equation}
+q_{i} <= C \quad, \forall i
+\end{equation}
+
+\begin{equation}
+q_{i} >= D_{i} \quad, \forall i
+\end{equation}
+
+
+\subsection{Optional Additional Constraints}
+\subsubsection{Number of times through the depot}
+\begin{equation}\label{eq2}
+\sum\limits_{i \in cities} p_{i,1} = n
+\end{equation}
+
+\begin{table}[h!]
+\centering
+\caption{My caption}
+\label{variables}
+\begin{tabular}{lll}
+\hline
+Decision Variables & Symbol & Description \\
+\hline
+\hline
+Precedes & $p_{i,j}$  & Binary Variable - 1 if $i$ precedes $j$\\
+Quantity & $q_{i}$ & Quantity Delivered at $j$ \\
+\\
+\hline
+Variables & Symbol & Description \\
+\hline
+\hline
+Distance & $d_{i,j}$ & Distance from $i$ to $j$  \\
+Capacity & C & Capacity of vehicle \\ 
+Demand & $D_{i}$ & Demand / Quantity ordered at city $i$ \\  
+\end{tabular}
+\end{table}
+
+\subsubsection{Optional Constraints}
+
+
+\section{Mosel Model}
+
+\subsection{Data}
+
+The city location and population data used to create the symmetric undirected graph of Irish cities was obtained from Tageo\footnote{\url{http://www.tageo.com/index-e-ei-cities-IE.htm}}. The data was cleaned in \texttt{python} and an adjacency matrix of the distance `by flight' between cities was calculated using the \textit{vincenty}\footnote{\url{https://geopy.readthedocs.io/en/1.10.0/}} distance (great-circle distance) from the \texttt{geopy} library.
+
+Demand for each city was calculated within \texttt{Xpress Mosel} as being proportional to the population of the city with an added random component.
+
+\subsection{The model development process; what facilities/ features does the development environment
+have to aid model development and solution of your problem? }
+
+
+
+
+\subsection{How easy is it to verify correctness of the model and to separate the problem and its data}
+Verifying the correctness of the model was relatively simple. We built the model in \texttt{Xpress Mosel} using a dummy dataset containing a 5-by-5 adjacency matrix. Examining the solutions in `solution' tab within Xpress, we were able to verify that each of the model's constraints were being respected and that indeed for the small dummy dataset the result of the minimised objective function was as expected. Applying the Mosel model to our application of choice, after initialising the datafile containing the adjacency matrix for the distances of Irish cities, although the model itself remained the same, some of the model's parameters had to be altered to fit the new data. Constraints (\ref{Q}, \ref{incQ}, \ref{T} and \ref{incT}), depend on the capacity parameter and on the time available parameter of the vehicle. For some values of these parameters with a given dataset, the model will be infeasible. Additionally the optional constraint for the number of times the vehicle must pass by the depot must be feasible. For example, if demand at city 1 is 400 units and the capacity of the vehicle is 300 units, the problem will be infeasible and Mosel will not find a solution.
+
+\subsection{How easy is it to either perform sensitivity analysis on the defined problem or to
+amend/extend the problem? }
+
+Amending and/or extending the problem presented here is feasible depending on the changes/extensions the user seeks to make. We have demonstrated that by stipulating some additional constraints such as the number of times the vehicle must return to the depot, respecting time windows are easy. This is possible by altering/adding some constraints. 
+
+However, for some changes/extensions, we would need a different model. If we wanted to change the model to use a number of $n$ vehicles to find $n$ tour for each vehicle so that each city is visited once we would need to change the subtour elimination constraint completely. 
+
+Further, if we were to extend the model to a case study with many more nodes, we would need to adopt a different formulation such as tree search or a heuristic approach \cite{gueret1999applications}.
+
+\subsection{What theoretical principles are demonstrated in your application?}
+
+
+
+Stochastic Techniques.....????
+
+\section{Results}
+
+\subsection{Tour length: mean, median,std}
+
+\subsection{Time to find for n=?: mean, median, std}
+
+\section{Conlusion/Recommendations}
+
+\subsection{The dependence on Software}
+\textbf{Whether you agree with the statement above : In OR practice and research, software is fundamental. The dependence
+of OR on software implies that the ways in which software is developed, managed, and distributed can
+have a significant impact on the field.}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\clearpage
+\section*{Appendix - Results}
+
+\begin{lstlisting}
+
+\end{lstlisting}
+
+\section*{Authorship}
+
+Louis Sections: Part of Mosel Implementation, 2,3 ,4.1,4.3
+
+
+
+\clearpage
+\bibliographystyle{acm}
+\bibliography{assignment3}
+
+\end{document}

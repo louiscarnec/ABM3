@@ -45,6 +45,8 @@ model "VRP"
 		VCAPACITY
 	end-initializations
 	
+	
+	
 	!Print Total Demand
 	totaldemand := sum(i in cities) demand(i)
 	writeln(totaldemand)
@@ -59,16 +61,16 @@ model "VRP"
 	forall(j in citiestovisit) sum(i in cities | i<>j) move(i,j)=1
 	forall(i in citiestovisit) sum(j in cities | i<>j) move(i,j)=1
 	
-	
 
-	!if i first city i tour: total quantity delivered = demand from city
+	!if i first city in tour: total quantity delivered = demand from city
 	forall(i in citiestovisit) totalq(i) <= VCAPACITY + (demand(i) - VCAPACITY)*move(1,i)
+	
 	
 	!strictly increasing quant
 	forall(i,j in citiestovisit | i<>j) totalq(j) >= totalq(i) + demand(j) - VCAPACITY + VCAPACITY*move(i,j) + (VCAPACITY - demand(j) - demand(i))*move(j,i)
 	
 	!Number of times pass through the depot / NUMBER OF TRIPS = 4
-	!sum(i in citiestovisit) move(i,1)=2
+	!sum(i in citiestovisit) move(i,1)=1
 	
 	!upper and lower bound on quantity
 	forall(i in citiestovisit) do
@@ -87,7 +89,8 @@ model "VRP"
 	!upper bound time
 	forall(i in citiestovisit)do
 		totaltime(i) <= TIMECAPACITY
-		!)
+	end-do	
+	!)
 	
 	!decision variable is binary
 	forall(i,j in cities | i<>j) move(i,j) is_binary

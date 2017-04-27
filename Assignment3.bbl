@@ -1,0 +1,20 @@
+\begin{thebibliography}{1}
+
+\bibitem{cordeau2007vehicle}
+{\sc Cordeau, J.-F., Laporte, G., Savelsbergh, M.~W., and Vigo, D.}
+\newblock Vehicle routing.
+\newblock {\em Handbooks in operations research and management science 14\/}
+  (2007), 367--428.
+
+\bibitem{gueret1999applications}
+{\sc Gu{\'e}ret, C., Prins, C., and Sevaux, M.}
+\newblock Applications of optimization with xpress-mp.
+\newblock {\em contract\/} (1999), 00034.
+
+\bibitem{toth2002models}
+{\sc Toth, P., and Vigo, D.}
+\newblock Models, relaxations and exact approaches for the capacitated vehicle
+  routing problem.
+\newblock {\em Discrete Applied Mathematics 123}, 1 (2002), 487--512.
+
+\end{thebibliography}
