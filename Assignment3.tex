@@ -94,40 +94,42 @@ Adedayo \textsc{Adelowokan}
 \end{titlepage}
 
 \section{Introduction}
+%DAYO{
+The Vehicle Routing Problem (VRP) dates to the late 50s, although there has been nearly 60 years of research in this phenomenon large-scale versions of this problem still pose a challenge for the scientific community. 
 
-The Vehicle Routing Problem (VRP) dates to the late 50s, although there has been nearly 60 years of research in this phenomenon large-scale versions of this problem still poses a challenge for the scientific community. The Vehicle Routing Problem tries to find a way to visit several locations given a certain number of vehicles in a cost-effective way. The simplest definition states that every customer is visited by one vehicle, and each vehicle does one trip starting and ending at the depot. In which order should customers be visited and in what order. Several constraints would need to be fulfilled, this in turn affects the result to the previous question. 
+The Vehicle Routing Problem tries to find a way to visit locations in a graph given a number of vehicles in a cost-effective way. The simplest definition states that every customer is visited by one vehicle, and each vehicle does one trip starting and ending at the depot. The problem involves finding in which order should customers be visited. 
+%}
 
 \section{Application: Goods Delivery}
-
-The case study problem we have tackled is the delivery of goods throughout Irish cities and town from a single depot location based in Dublin given time window constraints on delivery times. A single vehicle, with a given carrying capacity, must deliver goods to all towns/nodes in the graph and meet each town's demand for goods. Given the fact that each vehicle has a given capacity, the transportation vehicle can only take so many goods and must therefore revert to the depot. If the vehicle reaches a town after 5pm, it must wait overnight and incur fixed overnight charges.
+%LOUIS{
+The case study problem we have tackled is the delivery of goods throughout Irish cities and towns from a single depot location based in Dublin given time window constraints on delivery times. A single vehicle, with a given carrying capacity, must deliver goods to all towns/nodes in the graph and meet each town's demand for goods, that is deliver an amount of goods equal to that cities demand. Given the fact that each vehicle has a given capacity, the transportation vehicle can only take so many goods and must therefore revert to the depot. If the vehicle reaches a town after 5pm, it must wait overnight and incur fixed overnight charges.
 
 Our problem involves finding the optimal route for the vehicle so that costs are minimised, where costs incurred stem from the distance covered by the vehicle and any overnight fixed charges incurred. This is a Vehicle Routing Problem (VRP), a variant of the Travelling Salesman Problem for which the \textit{order} of nodes in a graph to be visited must be optimised to find the tour with lowest travelled distance. 
 
 In his chapter on vehicle routing, Cordeau warns that due to high variability of problems in practice, the objective function and constraints of VRP are highly variable and thus must be tailored to each problem \cite{cordeau2007vehicle}.
 \\\\
-We initially attempted to solve a slightly different version of the problem solved here and modelled in Section 3; the `Capacitated Vehicle Routing Problem' \cite{toth2002models}. In this problem multiple vehicles are used at the same time to deliver goods around the symmetric undirected graph. In our implementation we followed closely the implementation used in section 11.5 of  `Applications of optimization with Xpress-MP'  \cite{gueret1999applications} for planning flights. The model is similar to the one presented in this report, distance is minimised given that each node/city must only be visited once. To account for the fact that $n$ trips can be made by $n$ vehicles, an additional constraint is added to stipulate that the depot must have $n$ incoming edges. Optimising the model, we were able to create the subtours for the graph to be `broken' into $n$ subtours. Having Dublin as the depot, the $n$ closest cities to Dublin were used as outgoing/incoming nodes to be attached to the $n$ subtours. When it came to making subtour eliminiation procedure into $n$ subtours, we were unable to sreate a function which would allow us to form the subtour containing the depot to then break the smaller subtours.
+We initially attempted to solve a slightly different version of the problem solved here and modelled in Section 3; the `Capacitated Vehicle Routing Problem' \cite{toth2002models}. In this problem multiple vehicles are used at the same time to deliver goods around the symmetric undirected graph. In our implementation we followed closely the implementation used in section 11.5 of  `Applications of optimization with Xpress-MP'  \cite{gueret1999applications} for planning flights. The model is similar to the one presented in this report, distance is minimised given that each node/city must only be visited once. To account for the fact that $n$ trips can be made by $n$ vehicles, an additional constraint is added to stipulate that the depot must have $n$ incoming edges. Optimising the model, we were able to create the subtours for the graph to be `broken' into $n$ subtours. Having Dublin as the depot, the $n$ closest cities to Dublin were used as outgoing/incoming nodes to be attached to the $n$ subtours. When it came to making subtour eliminiation procedure into $n$ subtours, we were unable to create a function which would allow us to form the subtour containing the depot to then break the smaller subtours.
+%}
 
 
 
 \section{Related Work}
-
-Combinatorial optimization problems have been studied in huge detail, the Vehicle Routing Problem was initially introduced in 1959 (Dantzig and Ramser 1959). The needs of the transportation industry were the motivation behind the problem, especially realizing the amount of savings that could be made with small improvements in efficiency. Routing problems always have an abundance of complex constraints and variables, this is evident in the industry and our personal lives. These include traffic conditions, weather in certain situations, road-work etc. There are further constraints that would be specific to the industry which include shift limits for drivers, specified arrival and delivery times. The widely-studied version of VRPs are more simplistic, and utilize less constraints. The simpler versions still pose as a difficult task which shows how difficult it is to solve VRPs. 
+%DAYO{
+Combinatorial optimization problems have been studied in detail.  The Vehicle Routing Problem was initially introduced in 1959 \cite{dantzig1959truck}. The needs of the transportation industry were the motivation behind the problem, small improvements in efficiency could result in large economic gains. Routing problems always have an abundance of complex constraints and variables, this is evident in industry and our personal lives. Constraints specific to the industry include shift limits for drivers and specified arrival and delivery times. The widely-studied version of VRPs are often more simplistic, utilising fewer constraints. Simple versions with few nodes and few constraints still take relatively long to run.
 
 \subsection{Travelling Salesman Problem}
 The Travelling Salesman Problem (TSP) is one of the oldest known routing problems. It presents a salesman that has a specified number of cities to visit and needs to know the optimal order to visit these cities to minimize the distance needed to travel. TSP is an NP-hard problem (Lenstra and Kan 1981).
 
 \subsection{Vehicle Routing Problem}
-VRP is also an NP-hard problem but it?s safe to assume that the it?s a much harder problem to solve over TSP. VRP can be applied in various fields, logistics, communications, manufacturing, transportation etc. In a VRP there are several vehicles that need to visit many customers. Vehicles starts at depot before visiting a section of the customers before returning to the starting depot. Capacitated Vehicle Routing Problem (CVRP) is a classic problem, this involves finding a solution to a transport problem where customers can be reached via multiple identical vehicles with different capacity restrictions. A special case of VRP is Vehicle Routing Problem with Time Windows (VRPTW). VRPTW comes with its own added complexity, each customer has a start and end time which indicates the time the vehicle should be servicing. An example of this application would be in case of a company that delivers heating oil. Although this constraint is hard, the vehicle doesn?t need to arrive between that time, it can arrive before the start time but must remain inactive for a period. VRP is also an NP-hard problem (Lenstra and Kan 1981) but it safe to assume that the VRP is a much harder problem to solve over TSP. 
+VRP is also an NP-hard problem but it is safe to assume that the it iss a much harder problem to solve over TSP. VRP can be applied to various fields; logistics, communications, manufacturing, transportation, to list a few. In a VRP there are several vehicles that need to visit many customers. Vehicles starts at depot before visiting a section of the customers before returning to the starting depot. 
+Capacitated Vehicle Routing Problem (CVRP) is a classic problem, this involves finding a solution to a transport problem where customers can be reached via multiple identical vehicles with different capacity restrictions. 
+A special case of VRP is Vehicle Routing Problem with Time Windows (VRPTW). VRPTW comes with its own added complexity, each customer has a start and end time which indicates the time the vehicle should be servicing. An example of this application would be in case of a company that delivers heating oil. Although this constraint is hard, the vehicle does not need to arrive between that time, it can arrive before the start time but must remain inactive for a given period. 
+Like TSP, VRP is an NP-hard problem \cite{lenstra1981complexity} but it safe to assume that the VRP is a much harder problem to solve than TSP. 
+%}
 
-\subsection{VRP and complexity}
-
-The vehicle routing problem with time windows is an NP-hard problem \cite{el2010vehicle}.
-
-\section{Problem}
-A couple of important challenges companies are faced with are finding ways to increase profits, reduce costs and further increase customer satisfaction. One of the many ways companies can save costs is in having an effective supply chain management which involves choosing distribution center locations. The choice of locations can reduce transportation costs, and reduce lead times. By reducing lead times, inventory control becomes easier which in turn increases service level (Gallmann and Belvedere 2010).The factors for choosing a location go beyond lead time and reduction of costs, factors like the surrounding community also have a significant effect. For example, the strength of the infrastructure (road etc.) surrounding the location, reliability, congestion and vulnerability. An area with a strong infrastructure that is further away could be more beneficial to an area that is closer with weak infrastructure. These are the type of factors that could affect the supply chain, in service level, costs etc. A company that delivers readymade food to their customers adds its own factors to warehousing and this comes to play in location decisions. As readymade foods are perishable there is an increase in the need for effective operations [FIND REFERENCE]. Here this company would like to enlist a VRPTW solution which would consider the various constraints they have in terms of truck capacity, goods available etc., but would take into consideration the importance of timing.
 
 \subsection{How similar your problem is well-known solved cases}
-
+%LOUIS{
 \section{Mathematical Programming Model Formulation}
 
 The formulation proposed in this report is an extension of the formulation proposed in the `Applications of optimization with Xpress-MP' book in section 10.4 \cite{gueret1999applications}. The formulation is extended by; adding a general time window which applied to all cities within the graph (as opposed to individualised time windows), an additional constraint to specify the number of times the vehicle can return to the depot, an alternative subtour breaking constraint and lastly an uncertainty parameter.
@@ -135,7 +137,9 @@ The formulation proposed in this report is an extension of the formulation propo
 \subsection{Assumptions}
 Several assumptions are made in modelling this VRP problem.
 
-We assume that the time taken to travel from one city to another is linearly proportional to the distance by air between the two points, as such in the mathematical formulation of the model distance, rather than time is minimised. It is also assumed that no time is lost at each stop point, that is the time taken for the route is equal to the time taken proportional to the distance. For a route of length x, the time taken is the same whether there were 5 stops or 10 stops along the route. 
+We assume that the time taken to travel in the vehicle from one city to another ($i$ to $j$) is linearly proportional to the distance by air between the two points, as such in the mathematical formulation of the model distance, rather than time is minimised. It is also assumed that no time is lost at each stop point, that is the time taken for the route is equal to the time taken proportional to the distance. For a route of length x, the time taken is the same whether there were 5 stops or 10 stops along the route. 
+
+The speed of the vehicle is constant and thus the time to cover a given unit distance and the cost per unit distance of covering that distance is the same.
 
 
 \subsection{Objective Function}
@@ -226,9 +230,10 @@ Demand & $D_{i}$ & Demand / Quantity ordered at city $i$ \\
 
 \subsubsection{Optional Constraints}
 
-
+%}
 \section{Mosel Model}
 
+%LOUIS{
 \subsection{Data}
 
 The city location and population data used to create the symmetric undirected graph of Irish cities was obtained from Tageo\footnote{\url{http://www.tageo.com/index-e-ei-cities-IE.htm}}. The data was cleaned in \texttt{python} and an adjacency matrix of the distance `by flight' between cities was calculated using the \textit{vincenty}\footnote{\url{https://geopy.readthedocs.io/en/1.10.0/}} distance (great-circle distance) from the \texttt{geopy} library.
@@ -242,24 +247,40 @@ have to aid model development and solution of your problem? }
 
 
 \subsection{How easy is it to verify correctness of the model and to separate the problem and its data}
-Verifying the correctness of the model was relatively simple. We built the model in \texttt{Xpress Mosel} using a dummy dataset containing a 5-by-5 adjacency matrix. Examining the solutions in `solution' tab within Xpress, we were able to verify that each of the model's constraints were being respected and that indeed for the small dummy dataset the result of the minimised objective function was as expected. Applying the Mosel model to our application of choice, after initialising the datafile containing the adjacency matrix for the distances of Irish cities, although the model itself remained the same, some of the model's parameters had to be altered to fit the new data. Constraints (\ref{Q}, \ref{incQ}, \ref{T} and \ref{incT}), depend on the capacity parameter and on the time available parameter of the vehicle. For some values of these parameters with a given dataset, the model will be infeasible. Additionally the optional constraint for the number of times the vehicle must pass by the depot must be feasible. For example, if demand at city 1 is 400 units and the capacity of the vehicle is 300 units, the problem will be infeasible and Mosel will not find a solution.
+Verifying the correctness of the model was relatively simple. We built the model in \texttt{Xpress Mosel} using a dummy dataset containing a 5-by-5 adjacency matrix. Examining the solutions in `solution' tab within Xpress, we were able to verify that each of the model's constraints were being respected and that indeed for the small dummy dataset the result of the minimised objective function was as expected.
+
+ Applying the Mosel model to our application of choice, after initialising the datafile containing the adjacency matrix for the distances of Irish cities, although the model itself remained the same, some of the model's parameters had to be altered to fit the new data in order for the model to output a result, otherwise the model would keep running. Constraints (\ref{Q}, \ref{incQ}, \ref{T} and \ref{incT}), depend on the capacity parameter and on the time available parameter of the vehicle. For some values of these parameters with a given dataset, the model will be infeasible. Additionally, the optional constraint for the number of times the vehicle must pass by the depot must be feasible. For example, if demand at city 1 is 400 units and the capacity of the vehicle is 300 units, the problem will be infeasible and Mosel will not find a solution. The capacity of the vehicle needs to be increased for the model to function. Likewise, if the speed of the vehicle is 20 km/h, the working hours of delivery are of 8 hours, the maximum distance covered in the route is 160 km.
+ 
+In order to make the program more versatile in implementing with different datasets, we created if-loops which would raise an error in case the parameters provided do not allow for a feasible solution to be found.
+
+This versatility enables us to solve different problems. For example, we could solve a VRP, for picking up broken Dublin City Bikes from the various stations around Dublin. We would download the locations of the stations, create an adjacency matrix using the same \texttt{python} program used in creating the Irish cities adjacency matrix and solve for the quickest route. 
 
 \subsection{How easy is it to either perform sensitivity analysis on the defined problem or to
 amend/extend the problem? }
 
-Amending and/or extending the problem presented here is feasible depending on the changes/extensions the user seeks to make. We have demonstrated that by stipulating some additional constraints such as the number of times the vehicle must return to the depot, respecting time windows are easy. This is possible by altering/adding some constraints. 
+Amending and/or extending the problem presented here is feasible depending on the changes/extensions the user seeks to make. We have demonstrated that the model can be extended easily, by stipulating some additional constraints such as the number of times the vehicle must return to the depot and respecting time windows are easy. This is possible by altering/adding some constraints. 
 
-However, for some changes/extensions, we would need a different model. If we wanted to change the model to use a number of $n$ vehicles to find $n$ tour for each vehicle so that each city is visited once we would need to change the subtour elimination constraint completely. 
+Further, the model's parameters can easily be altered; such as the maximal capacity of the vehicle, the number of hours in the working day, the average speed of the vehicle, the probability of the time to go from one node to another increasing or decreasing.
 
-Further, if we were to extend the model to a case study with many more nodes, we would need to adopt a different formulation such as tree search or a heuristic approach \cite{gueret1999applications}.
+However, for some changes/extensions, we would need a different model. If we wanted to change the model to use a number of $n$ vehicles to find $n$ tour for each vehicle so that each city is visited once, we would need to change the subtour elimination constraint completely. 
+
+Further, if we were to extend the model to a case study with many more nodes, we would need to adopt a different formulation such as tree search or a heuristic approach \cite{gueret1999applications}. The model we are currently using would work for instances of up to 30 nodes only. Therefore, the Dublin Bikes case study proposed ion the previous section would be infeasible as there are 102 stations.
+
+
 
 \subsection{What theoretical principles are demonstrated in your application?}
 
+The theoretical principles demonstrated in our application are \textit{network optimisation} and \textit{stochastic techniques}. The distance between cities, produced in the form of an adjacency matrix, represent a graph of cities where the nodes are cities and edge weights are the distances between them.
+
+Network Optimisation
 
 
-Stochastic Techniques.....????
+Stochastic Techniques - simulate random probability of edge cost increasing
 
+%}
 \section{Results}
+
+random increase in cost
 
 \subsection{Tour length: mean, median,std}
 
