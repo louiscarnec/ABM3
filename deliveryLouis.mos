@@ -135,8 +135,8 @@ end-procedure
 		TOUR:={}
 		
 		forall(i in trips)
-			if move(1,i)=1 then
-				x(i):=i
+			if move(1,i)>=1 then
+				TOUR+=1
 			end-if	
 		
 		first:=1

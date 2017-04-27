@@ -23,7 +23,7 @@
 \geometry{a4paper} 
 \pagestyle{fancy}
 \lhead{}
-\rhead{Louis Carnec \\ 15204934}
+\rhead{Louis Carnec \\ Vijay Katta \\ Adedayo Adelowokan}
 \renewcommand{\headrulewidth}{0pt}
 \setlength\parindent{0pt}
 \usepackage{amstext} % for \text
@@ -95,6 +95,7 @@ Adedayo \textsc{Adelowokan}
 
 \section{Introduction}
 
+The Vehicle Routing Problem (VRP) dates to the late 50s, although there has been nearly 60 years of research in this phenomenon large-scale versions of this problem still poses a challenge for the scientific community. The Vehicle Routing Problem tries to find a way to visit several locations given a certain number of vehicles in a cost-effective way. The simplest definition states that every customer is visited by one vehicle, and each vehicle does one trip starting and ending at the depot. In which order should customers be visited and in what order. Several constraints would need to be fulfilled, this in turn affects the result to the previous question. 
 
 \section{Application: Goods Delivery}
 
@@ -108,15 +109,24 @@ We initially attempted to solve a slightly different version of the problem solv
 
 
 
-\subsection{Literature}
+\section{Related Work}
 
+Combinatorial optimization problems have been studied in huge detail, the Vehicle Routing Problem was initially introduced in 1959 (Dantzig and Ramser 1959). The needs of the transportation industry were the motivation behind the problem, especially realizing the amount of savings that could be made with small improvements in efficiency. Routing problems always have an abundance of complex constraints and variables, this is evident in the industry and our personal lives. These include traffic conditions, weather in certain situations, road-work etc. There are further constraints that would be specific to the industry which include shift limits for drivers, specified arrival and delivery times. The widely-studied version of VRPs are more simplistic, and utilize less constraints. The simpler versions still pose as a difficult task which shows how difficult it is to solve VRPs. 
 
+\subsection{Travelling Salesman Problem}
+The Travelling Salesman Problem (TSP) is one of the oldest known routing problems. It presents a salesman that has a specified number of cities to visit and needs to know the optimal order to visit these cities to minimize the distance needed to travel. TSP is an NP-hard problem (Lenstra and Kan 1981).
 
-\subsubsection{VRP and complexity}
+\subsection{Vehicle Routing Problem}
+VRP is also an NP-hard problem but it?s safe to assume that the it?s a much harder problem to solve over TSP. VRP can be applied in various fields, logistics, communications, manufacturing, transportation etc. In a VRP there are several vehicles that need to visit many customers. Vehicles starts at depot before visiting a section of the customers before returning to the starting depot. Capacitated Vehicle Routing Problem (CVRP) is a classic problem, this involves finding a solution to a transport problem where customers can be reached via multiple identical vehicles with different capacity restrictions. A special case of VRP is Vehicle Routing Problem with Time Windows (VRPTW). VRPTW comes with its own added complexity, each customer has a start and end time which indicates the time the vehicle should be servicing. An example of this application would be in case of a company that delivers heating oil. Although this constraint is hard, the vehicle doesn?t need to arrive between that time, it can arrive before the start time but must remain inactive for a period. VRP is also an NP-hard problem (Lenstra and Kan 1981) but it safe to assume that the VRP is a much harder problem to solve over TSP. 
 
+\subsection{VRP and complexity}
 
+The vehicle routing problem with time windows is an NP-hard problem \cite{el2010vehicle}.
 
-\subsubsection{How similar your problem is well-known solved cases}
+\section{Problem}
+A couple of important challenges companies are faced with are finding ways to increase profits, reduce costs and further increase customer satisfaction. One of the many ways companies can save costs is in having an effective supply chain management which involves choosing distribution center locations. The choice of locations can reduce transportation costs, and reduce lead times. By reducing lead times, inventory control becomes easier which in turn increases service level (Gallmann and Belvedere 2010).The factors for choosing a location go beyond lead time and reduction of costs, factors like the surrounding community also have a significant effect. For example, the strength of the infrastructure (road etc.) surrounding the location, reliability, congestion and vulnerability. An area with a strong infrastructure that is further away could be more beneficial to an area that is closer with weak infrastructure. These are the type of factors that could affect the supply chain, in service level, costs etc. A company that delivers readymade food to their customers adds its own factors to warehousing and this comes to play in location decisions. As readymade foods are perishable there is an increase in the need for effective operations [FIND REFERENCE]. Here this company would like to enlist a VRPTW solution which would consider the various constraints they have in terms of truck capacity, goods available etc., but would take into consideration the importance of timing.
+
+\subsection{How similar your problem is well-known solved cases}
 
 \section{Mathematical Programming Model Formulation}
 
@@ -297,7 +307,7 @@ have a significant impact on the field.}
 
 \section*{Authorship}
 
-Louis Sections: Part of Mosel Implementation, 2,3 ,4.1,4.3
+Louis Sections: Part of Mosel Implementation, 2,3 ,4.1,4.3,4.4
 
 
 

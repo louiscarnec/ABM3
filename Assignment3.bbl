@@ -6,6 +6,12 @@
 \newblock {\em Handbooks in operations research and management science 14\/}
   (2007), 367--428.
 
+\bibitem{el2010vehicle}
+{\sc El-Sherbeny, N.~A.}
+\newblock Vehicle routing with time windows: An overview of exact, heuristic
+  and metaheuristic methods.
+\newblock {\em Journal of King Saud University-Science 22}, 3 (2010), 123--131.
+
 \bibitem{gueret1999applications}
 {\sc Gu{\'e}ret, C., Prins, C., and Sevaux, M.}
 \newblock Applications of optimization with xpress-mp.
