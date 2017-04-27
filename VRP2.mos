@@ -32,9 +32,9 @@ model "VRP"
 		quantitydelivered: array(1..10) of real
 		distancecovered: array(1..10) of real
 		numberofstops: array(1..10) of integer
-		TIMECAPACITY = 9000000
+		TIMECAPACITY = 9000
 		KMH=80
-		cost_per_hour = 60 				!Cost per km in Euros, this is on top of fixed cost
+		cost_per_hour : array(cities, cities) of real	!Cost per km in Euros, this is on top of fixed cost
 		fixed_cost_per_city = 20    !Fixed cost per delivery in euros
 	end-declarations
 
@@ -56,8 +56,19 @@ model "VRP"
 	forall(i in citiestovisit)demand(i) := round((POP(i)/1000)+random*((POP(i)/100)))
 	!forall(i in citiestovisit)demand(i) := 50
 	
+	
+	!Increase the cost of per hour on randomly chosen routes
+	forall(i,j in citiestovisit |i<>j) do
+   		if random > 0.5 then
+    			cost_per_hour(i,j) := 60
+		else
+			cost_per_hour(i,j) := 25
+   		end-if
+	end-do
+	
+
 	!Objective Function: Distance Covered
-	dist := sum(i,j in cities | i<>j) ((DIST(i,j)/KMH)*cost_per_hour + fixed_cost_per_city) *move(i,j)
+	dist := sum(i,j in cities | i<>j) ((DIST(i,j)/KMH)*cost_per_hour(i,j) + fixed_cost_per_city) *move(i,j)
 	
 	!Visit every city once
 	forall(j in citiestovisit) sum(i in cities | i<>j) move(i,j)=1
