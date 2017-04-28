@@ -1,55 +1,44 @@
 !@encoding CP1252
 model "VRP"
 	uses "mmxprs"
-	
-	declarations
-		citiesNum: integer
-		VNUM: integer
-		VFIXEDCOST: integer
+
+	declarations !declaring for initializations
+		citiesNum: integer !number of cities in the graph
 	end-declarations 	
 	
-	initializations from "distsmall.txt"
+	initializations from "distsmall.txt" !Initialise adjacency matrix from file
 		citiesNum
-		VNUM
-		VFIXEDCOST
 	end-initializations	
 
 	declarations
-		cities = 1..citiesNum
-		citiestovisit = 2..citiesNum
-		cityNames : array(cities) of string
-		DIST : array(cities, cities) of real
-		POP: array(cities) of real
-		demand: array(cities) of real
-		vehicles = 1..VNUM
-		VCAPACITY: integer
-		move : array(cities, cities) of mpvar
-		totalq : array(citiestovisit) of mpvar
-		totaltime:array(citiestovisit) of mpvar
-		totaldist: array(citiestovisit) of mpvar
-		totaldemand:real
-		trips: integer
-		quantitydelivered: array(1..10) of real
-		distancecovered: array(1..10) of real
-		numberofstops: array(1..10) of integer
-		TIMECAPACITY = 9000
-		KMH=80
+		cities = 1..citiesNum !fixed size array of cities
+		citiestovisit = 2..citiesNum !nodes to visit (customers) from 2 to n
+		cityNames : array(cities) of string !name of cities in the graph
+		DIST : array(cities, cities) of real !adacency matrix - edge weights
+		POP: array(cities) of real !population per city
+		demand: array(cities) of real !demand array per city
+		VCAPACITY: integer !vehicle maximal capacity
+		
+		move : array(cities, cities) of mpvar !decision variable: whether to move from i to j
+		totalq : array(citiestovisit) of mpvar !decision variable: quantity delivered up to node i
+		totaltime:array(citiestovisit) of mpvar !decision variable: time spent travelling/trnasporting up to node i
+		
+		quantitydelivered: array(1..50) of real !total quantity delivered for trip
+		distancecovered: array(1..50) of real !total distance covered for trip
+		numberofstops: array(1..50) of integer !total number of stops for trip
+		TIMECAPACITY = 9 !maximal number of driving hours
+		KMH=80 !Average speed (constant)
 		cost_per_hour : array(cities, cities) of real	!Cost per km in Euros, this is on top of fixed cost
 		fixed_cost_per_city = 20    !Fixed cost per delivery in euros
 	end-declarations
 
-	initializations from "distsmall.txt"
+	initializations from "distsmall.txt" !Initialise from data file
 		POP
 		cityNames
 		DIST
 		VCAPACITY
 	end-initializations
 	
-	
-	
-	!Print Total Demand
-	totaldemand := sum(i in cities) demand(i)
-	writeln(totaldemand)
 	
 	!create demand based on population of city + random
 	!!!!!This will be changed later
@@ -59,16 +48,16 @@ model "VRP"
 	
 	!Increase the cost of per hour on randomly chosen routes
 	forall(i,j in citiestovisit |i<>j) do
-   		if random > 0.5 then
+   		if random > 0.8 then
     			cost_per_hour(i,j) := 60
 		else
-			cost_per_hour(i,j) := 25
+			cost_per_hour(i,j) := 50
    		end-if
 	end-do
 	
 
-	!Objective Function: Distance Covered
-	dist := sum(i,j in cities | i<>j) ((DIST(i,j)/KMH)*cost_per_hour(i,j) + fixed_cost_per_city) *move(i,j)
+	!Objective Function: Cost function where cost is a product of distance covered multiplied by time per hour plus cost of stopping at a city
+	cost := sum(i,j in cities | i<>j) ((DIST(i,j)/KMH)*cost_per_hour(i,j) + fixed_cost_per_city) *move(i,j)
 	
 	!Visit every city once
 	forall(j in citiestovisit) sum(i in cities | i<>j) move(i,j)=1
@@ -107,7 +96,7 @@ model "VRP"
 	!decision variable is binary
 	forall(i,j in cities | i<>j) move(i,j) is_binary
 	
-	procedure printTrips
+	procedure printTrips !printing procedure: shows each trip (from depot to depot)
 	writeln("---")
 	 writeln("Cost of Total Distance Covered: ", getobjval)
 	 forall(i in citiestovisit)
@@ -141,10 +130,7 @@ model "VRP"
 	end-procedure
 	
 	
-	!minimise(dist)
-	!while(getobjval = 0) do
-		minimise(dist)
-	!end-do	
+	minimise(cost) !minimise the objective function
 	printTrips
 	
 		
