@@ -21,14 +21,14 @@ model "VRP"
 		
 		move : array(cities, cities) of mpvar !decision variable: whether to move from i to j
 		totalq : array(citiestovisit) of mpvar !decision variable: quantity delivered up to node i
-		totaltime:array(citiestovisit) of mpvar !decision variable: time spent travelling/trnasporting up to node i
+		totaltime:array(citiestovisit) of mpvar !decision variable: time spent travelling/transporting up to node i
 		
 		quantitydelivered: array(1..50) of real !total quantity delivered for trip
 		distancecovered: array(1..50) of real !total distance covered for trip
 		numberofstops: array(1..50) of integer !total number of stops for trip
-		TIMECAPACITY = 9 !maximal number of driving hours
+		TIMECAPACITY = 99999999 !maximal number of driving hours
 		KMH: array(cities,cities) of real!Average speed (constant)
-		cost_per_hour = 80	!Cost per km in Euros, this is on top of fixed cost
+		cost_per_hour = 80	!Cost per hour in Euros, this is on top of fixed cost
 		fixed_cost_per_city = 20    !Fixed cost per delivery in euros
 	end-declarations
 
@@ -41,8 +41,7 @@ model "VRP"
 	
 	
 	!create demand based on population of city + random
-	!!!!!This will be changed later
-	forall(i in citiestovisit)demand(i) := round((POP(i)/1000)+random*((POP(i)/1000)))
+	forall(i in citiestovisit)demand(i) := round((POP(i)/1000)+(random-0.5)*((POP(i)/1000)))
 	!forall(i in citiestovisit)demand(i) := 50
 	
 	
@@ -97,31 +96,35 @@ model "VRP"
 	forall(i,j in cities | i<>j) move(i,j) is_binary
 	
 	procedure printTrips !printing procedure: shows each trip (from depot to depot)
-	writeln("---")
-	 writeln("Cost of Total Distance Covered: ", getobjval)
+
+
+	writeln("============")
+	 writeln("Cost of Goods Delivery (All Trips) : ", getobjval, " Euros ")
+	writeln(" From(City) - To (City)    |", strfmt("Distance(KM)",6),"|", strfmt("Speed(KMH)",6),"|", strfmt("Time(Hours)",6),"|", strfmt("Quantity",6))
+	writeln("------------------------------------------------------------------------")
 	 forall(i in citiestovisit)
 	  if(getsol(move(1,i))>0) then
 	   ct:=demand(i)
 	   distancesub:=DIST(1,i)
 	   stops:=1
-	   writeln(cityNames(1), " -> ", cityNames(i), " Distance: ", DIST(1,i))
+	   writeln(strfmt( cityNames(1),-15), " -> ", strfmt( cityNames(i),-15), " | ", strfmt( integer(DIST(1,i)),10), " |  ", strfmt( KMH(1,i),7), " |  ", strfmt( DIST(1,i)/KMH(1,i),8,2) , " |  ", strfmt( demand(i),6))
 	   p:=i
 	   while(p<>1) do
 	    n:= integer(round(sum(j in cities) j*getsol(move(p,j))))
 	    distpn:=DIST(p,n)
 	    if (distpn=0)then
 	    	distpn:=DIST(n,p)
-	    end-if	
-	    writeln(cityNames(p), " -> ", cityNames(n), " Distance:" , distpn)
+	    end-if
+	   writeln(strfmt( cityNames(p),-15), " -> ", strfmt( cityNames(n),-15), " | ", strfmt( DIST(p,n),10), " |  ", strfmt( KMH(p,n),7), " |  ", strfmt( DIST(p,n)/KMH(p,n),8,2) , " |  ", strfmt( demand(n),6))	
 	    ct+=demand(n)
 	    distancesub+=distpn
 	    p:=n
 	    stops+=1
 	   end-do
-	   writeln("Quantity delivered: ", ct)
-	   writeln("Distance Covered: ", distancesub)
-	   writeln("Number of Stops in trip: ", stops)
-	   writeln("---TRIP---")
+	   writeln("Quantity Delivered     : ", ct)
+	   writeln("Distance Covered       : ", distancesub)
+	   writeln("Number of Stops in Trip: ", stops)
+	   writeln("---TRIP-—")
 	   trips+=1
 	   quantitydelivered(trips):= ct
 	   distancecovered(trips) := distancesub
