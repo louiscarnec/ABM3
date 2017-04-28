@@ -267,7 +267,10 @@ A printing procedure was created which would output the total distance covered, 
 \subsection{The model development process; what facilities/ features does the development environment
 have to aid model development and solution of your problem? }
 
+Xpress Mosel, the development environment used in conducting this report, allowed us, the users, to easily check the status of our model which was beneficial in developing and finding a solution to our model. 
 
+The info bar, when an error occurs, outputs a range of errors in the code, this allowed us to quickly and easily debug our code. By right clicking on a variable within the text and showing values assigned to the variable, we were able to quickly check that each variable was correctly assigned, this was useful when working with a dummy data while building the model.
+The `Run Bar' feature, to the right of the screen allowed us to check the solutions being produced when running the model by navigating to the `Solutions' tab. The `Stats' tab enabled us to check the status of the program without having to print it out. Finally the `Row View' feature within the `Matrix' tab allowed to test the effect of different vehicle capacity and time capacity parameters on the slack variables for each constraint.
 
 
 \subsection{How easy is it to verify correctness of the model and to separate the problem and its data}
@@ -294,12 +297,7 @@ Further, if we were to extend the model to a case study with many more nodes, we
 
 \subsection{What theoretical principles are demonstrated in your application?}
 
-The theoretical principles demonstrated in our application are \textit{network optimisation} and \textit{stochastic techniques}. The distance between cities, produced in the form of an adjacency matrix, represent a graph of cities where the nodes are cities and edge weights are the distances between them.
-
-Network Optimisation
-
-
-Stochastic Techniques - simulate random probability of edge cost increasing
+The theoretical principles demonstrated in our application come from \textit{network optimisation} and \textit{stochastic optimization}. The distance between cities, produced in the form of an adjacency matrix, represent a graph of cities where the nodes are cities and edge weights are the distances between them. Using combinatorial optimisation, the optimal set of nodes in a specific order are returned while respecting a set of constraints. At the same time this application is a stochastic optimisation problem as there is the presence of randomness in both the demand and speed variables, that is the result of the optimisation, the total cost of the route, should vary across runs of the model as it is affected by randomness. Using a stochastic optimisation model of this type allows us to more realistically \textit{simulate} the cost of a route. Running the model a number of times and getting a set of statistics which represent the results would enable us, the analysts, in making recommendations on best route to choose to minimise cost.
 
 %}
 \section{Results}
