@@ -27,8 +27,8 @@ model "VRP"
 		distancecovered: array(1..50) of real !total distance covered for trip
 		numberofstops: array(1..50) of integer !total number of stops for trip
 		TIMECAPACITY = 9 !maximal number of driving hours
-		KMH=80 !Average speed (constant)
-		cost_per_hour : array(cities, cities) of real	!Cost per km in Euros, this is on top of fixed cost
+		KMH: array(cities,cities) of real!Average speed (constant)
+		cost_per_hour = 80	!Cost per km in Euros, this is on top of fixed cost
 		fixed_cost_per_city = 20    !Fixed cost per delivery in euros
 	end-declarations
 
@@ -42,24 +42,24 @@ model "VRP"
 	
 	!create demand based on population of city + random
 	!!!!!This will be changed later
-	forall(i in citiestovisit)demand(i) := round((POP(i)/1000)+random*((POP(i)/100)))
+	forall(i in citiestovisit)demand(i) := round((POP(i)/1000)+random*((POP(i)/1000)))
 	!forall(i in citiestovisit)demand(i) := 50
 	
 	
-	!Increase the cost of per hour on randomly chosen routes
-	forall(i,j in citiestovisit |i<>j) do
+	!Decrease KMH per hour on randomly chosen route
+	forall(i,j in cities |i<>j) do
    		if random > 0.8 then
-    			cost_per_hour(i,j) := 60
+    			KMH(i,j) := 60
 		else
-			cost_per_hour(i,j) := 50
+			KMH(i,j) := 100
    		end-if
 	end-do
 	
 
 	!Objective Function: Cost function where cost is a product of distance covered multiplied by time per hour plus cost of stopping at a city
-	cost := sum(i,j in cities | i<>j) ((DIST(i,j)/KMH)*cost_per_hour(i,j) + fixed_cost_per_city) *move(i,j)
+	cost := sum(i,j in cities | i<>j) ((DIST(i,j)/KMH(i,j))*cost_per_hour + fixed_cost_per_city) *move(i,j)
 	
-	!Visit every city once
+	!Visit every city once !Taken from Gueret et al. Applications of Optimization with Xpress-MP section 10.4
 	forall(j in citiestovisit) sum(i in cities | i<>j) move(i,j)=1
 	forall(i in citiestovisit) sum(j in cities | i<>j) move(i,j)=1
 	
@@ -82,11 +82,11 @@ model "VRP"
 	
 
 	! if i first city in tour: total time = distance to city
-	forall(i in citiestovisit) totaltime(i) <= TIMECAPACITY + ( (DIST(1,i)/KMH) -TIMECAPACITY) * move(1,i)
+	forall(i in citiestovisit) totaltime(i) <= TIMECAPACITY + ( (DIST(1,i)/KMH(1,i)) -TIMECAPACITY) * move(1,i)
 	
 	
 	!strictly increasing time
-	forall(i,j in citiestovisit |i<>j) totaltime(j) >= totaltime(i) + (DIST(i,j)/KMH) - TIMECAPACITY + TIMECAPACITY*move(i,j) + (TIMECAPACITY - (DIST(j,i)/KMH))*move(j,i)
+	forall(i,j in citiestovisit |i<>j) totaltime(j) >= totaltime(i) + (DIST(i,j)/KMH(i,j)) - TIMECAPACITY + TIMECAPACITY*move(i,j) + (TIMECAPACITY - (DIST(j,i)/KMH(i,j)))*move(j,i)
 	
 	!upper bound time
 	forall(i in citiestovisit)do

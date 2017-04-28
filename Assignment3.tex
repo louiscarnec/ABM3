@@ -95,16 +95,16 @@ Adedayo \textsc{Adelowokan}
 
 \section{Introduction}
 %DAYO{
-The Vehicle Routing Problem (VRP) dates to the late 50s, although there has been nearly 60 years of research in this phenomenon large-scale versions of this problem still pose a challenge for the scientific community. 
+The Vehicle Routing Problem (VRP) dates to the late 50s, although there has been nearly 60 years of research in this phenomenon, large-scale versions of this problem still pose a challenge for the scientific community. 
 
 The Vehicle Routing Problem tries to find a way to visit locations in a graph given a number of vehicles in a cost-effective way. The simplest definition states that every customer is visited by one vehicle, and each vehicle does one trip starting and ending at the depot. The problem involves finding in which order should customers be visited. 
 %}
 
 \section{Application: Goods Delivery}
 %LOUIS{
-The case study problem we have tackled is the delivery of goods throughout Irish cities and towns from a single depot location based in Dublin given time window constraints on delivery times. A single vehicle, with a given carrying capacity, must deliver goods to all towns/nodes in the graph and meet each town's demand for goods, that is deliver an amount of goods equal to that cities demand. Given the fact that each vehicle has a given capacity, the transportation vehicle can only take so many goods and must therefore revert to the depot. If the vehicle reaches a town after 5pm, it must wait overnight and incur fixed overnight charges.
+The case study problem we have tackled is the delivery of goods throughout Irish cities and towns from a single depot location based in Dublin given a general time window constraint on delivery times. A single vehicle, with a given carrying capacity, must deliver goods to all towns/nodes in the graph and meet each town's demand for goods, that is deliver an amount of goods equal to that city's demand. Given the fact that each vehicle has a given capacity, the transportation vehicle can only take so many goods and must therefore revert back to the depot to pick up more goods to deliver. Further, deliveries must be conducted within a maximum number of working hours and the vehicle must return to the depot. Therefore, each `trip', if forced by the time constraint on working hours available, is a working day. Here a `trip' is a succession of edges connecting nodes that leaves and returns to the depot once. 
 
-Our problem involves finding the optimal route for the vehicle so that costs are minimised, where costs incurred stem from the distance covered by the vehicle and any overnight fixed charges incurred. This is a Vehicle Routing Problem (VRP), a variant of the Travelling Salesman Problem for which the \textit{order} of nodes in a graph to be visited must be optimised to find the tour with lowest travelled distance. 
+Our problem involves finding the optimal route for the vehicle so that costs are minimised, where costs incurred stem from the the time spent travelling across the route, the sum of the `trips'. This is a Vehicle Routing Problem (VRP), a variant of the Travelling Salesman Problem for which the \textit{order} of nodes in a graph to be visited must be optimised to find the tour with lowest travelled distance. 
 
 In his chapter on vehicle routing, Cordeau warns that due to high variability of problems in practice, the objective function and constraints of VRP are highly variable and thus must be tailored to each problem \cite{cordeau2007vehicle}.
 \\\\
@@ -118,7 +118,7 @@ We initially attempted to solve a slightly different version of the problem solv
 Combinatorial optimization problems have been studied in detail.  The Vehicle Routing Problem was initially introduced in 1959 \cite{dantzig1959truck}. The needs of the transportation industry were the motivation behind the problem, small improvements in efficiency could result in large economic gains. Routing problems always have an abundance of complex constraints and variables, this is evident in industry and our personal lives. Constraints specific to the industry include shift limits for drivers and specified arrival and delivery times. The widely-studied version of VRPs are often more simplistic, utilising fewer constraints. Simple versions with few nodes and few constraints still take relatively long to run.
 
 \subsection{Travelling Salesman Problem}
-The Travelling Salesman Problem (TSP) is one of the oldest known routing problems. It presents a salesman that has a specified number of cities to visit and needs to know the optimal order to visit these cities to minimize the distance needed to travel. TSP is an NP-hard problem (Lenstra and Kan 1981).
+The Travelling Salesman Problem (TSP) is one of the oldest known routing problems. It presents a salesman that has a specified number of cities to visit and needs to know the optimal order to visit these cities to minimise the distance needed to travel.
 
 \subsection{Vehicle Routing Problem}
 VRP is also an NP-hard problem but it is safe to assume that the it iss a much harder problem to solve over TSP. VRP can be applied to various fields; logistics, communications, manufacturing, transportation, to list a few. In a VRP there are several vehicles that need to visit many customers. Vehicles starts at depot before visiting a section of the customers before returning to the starting depot. 
@@ -132,83 +132,97 @@ Like TSP, VRP is an NP-hard problem \cite{lenstra1981complexity} but it safe to 
 %LOUIS{
 \section{Mathematical Programming Model Formulation}
 
-The formulation proposed in this report is an extension of the formulation proposed in the `Applications of optimization with Xpress-MP' book in section 10.4 \cite{gueret1999applications}. The formulation is extended by; adding a general time window which applied to all cities within the graph (as opposed to individualised time windows), an additional constraint to specify the number of times the vehicle can return to the depot, an alternative subtour breaking constraint and lastly an uncertainty parameter.
+The formulation proposed in this report is an extension of the formulation proposed in the `Applications of optimization with Xpress-MP' book in section 10.4 \cite{gueret1999applications}. The formulation is extended by; adding a general time window which applies to all cities within the graph (as opposed to individualised time windows) and thus a constraint forcing the vehicle to return to the depot within the time window, an additional constraint to specify the number of times the vehicle can return to the depot and an probability parameter simulating the random probability of being stuck in traffic on a given leg of the trip.
 
 \subsection{Assumptions}
 Several assumptions are made in modelling this VRP problem.
 
-We assume that the time taken to travel in the vehicle from one city to another ($i$ to $j$) is linearly proportional to the distance by air between the two points, as such in the mathematical formulation of the model distance, rather than time is minimised. It is also assumed that no time is lost at each stop point, that is the time taken for the route is equal to the time taken proportional to the distance. For a route of length x, the time taken is the same whether there were 5 stops or 10 stops along the route. 
-
-The speed of the vehicle is constant and thus the time to cover a given unit distance and the cost per unit distance of covering that distance is the same.
+We assume that the time taken to travel from one city to another is linearly proportional to the distance by air between the two points, as such in the mathematical formulation of the model distance, rather than time is minimised. It is also assumed that no time is lost at each stop point, that is the time taken for the route is equal to the time taken proportional to the distance. However, a fixed cost is incurred at each stop. This assumption means that for a route of length x, the time taken is the same whether there were 5 stops or 10 stops along the route. It is assumed that the distance covered over time does not affect cost. Cost is only related to time spent travelling, plus a fixed cost.
 
 
 \subsection{Objective Function}
 
-The objective function we wish to minimise is the cost of the route, where the distance covered over the route is directly proportional to the distance. 
-
+The objective function (\ref{eq1}) we wish to minimise is the cost of delivering goods throughout the graph.
 \begin{equation}\label{eq1}
-\textrm{Minimise} \quad \sum\limits_{i \in cities} \sum\limits_{j \in cities, i \neq j} d_{i,j} p_{i,j}
+\textrm{Minimise}\quad  Cost = \quad \sum\limits_{i \in cities} \sum\limits_{j \in cities, i \neq j} c_{i,j}p_{i,j}
 \end{equation}
-
-\subsection{Constraints}
-
-\begin{equation}\label{eq2}
-\sum\limits_{i \in cities} p_{i,j} = 1 \quad , \forall j \in cities
-\end{equation}
-
-\begin{equation}\label{eq3}
-\sum\limits_{j \in cities} p_{i,j} = 1 \quad , \forall i \in cities
-\end{equation}
+Where, $$c_{i,j} = (d_{i,j}/kmph_{i,j})*cph + \bar{c}$$
+$c_{i,j}$ is the cost of travelling from node $i$ to node $j$, which is given by the time taken to travel from $i$ to $j$ (distance / speed) times the cost per hour $cph$ for the given leg journey, plus a fixed cost for each stop $\bar{c}$. 
+\\\\
+There are three decision variables in this model, $p_{i,j}$ which states whether node $j$ is a successor to node $i$, the total quantity at node $i$ ($q_{i}$), and the total time spent delivering at node $i$ ($t_{i}$).
 
 \begin{equation}\label{eq4}
 p_{i,j} \in{\{0,1\}} \quad , \forall i,j \in cities\quad, where \quad i \neq j
 \end{equation}
 
-\subsubsection{Alternative Subtour Breaking Constraint: Increasing Quantity }
+$p_{i,j}$ in (\ref{eq4}) is a binary decision variable which states that the vehicle travels from node $i$ to node $j$ if $p_{i,j}=1$. The total quantity delivered at $i$ ensures that the quantity delivered is equal to demand for each node and that each trip in the tour is conducted while respecting the maximal capacity of the vehicle. The total time delivering decision variable is similar to the total quantity delivered variable and ensures that the route respects the fact that there is a general time window to be respected for delivery and that the vehicle must return to the depot within this time window. By solving for these variable, the model should return the shortest route which respect to the constraints presented below.
+
+\subsection{Constraints}
+
+Equations (\ref{eq2}) and (\ref{eq3}) state that each city (expect from the depot, which is always node 1) must be entered and departed exactly once, so that every city is delivered to but that the tour is not unnecessarily extended by visiting nodes which have already been visited. Note that $i,j\neq1$ due to the fact that the depot can be entered and departed multiple times. The vehicle should return to the depot once it has delivered all goods within its capacity ($C$) or worked for a given number of hours ($H$, see Table 1). 
+
+\begin{equation}\label{eq2}
+\sum\limits_{i \in cities} p_{i,j} = 1 \quad , \forall j \in cities \quad, j\neq1
+\end{equation}
+
+\begin{equation}\label{eq3}
+\sum\limits_{j \in cities} p_{i,j} = 1 \quad , \forall i \in cities\quad, i\neq1
+\end{equation}
+
+
+
+\subsubsection{Increasing Total Quantity}
+
+The following constraints are used in finding the optimal tour given a set of constraints while solving for the decision variable total quantity, the total quantity delivered at a given node. The total quantity delivered at a given node ($q_{i}$) must be less or equal to the maximal capacity ($C$) of the delivering vehicle (\ref{Qleq}) and less or equal to the demand ($D_{i}$) / or the amount to be delivered at that node (\ref{Qgeq}). Constraint (\ref{Qleq}) forces the vehicle to take trips back to the depot if it must deliver a total demand greater then the total capacity of the vehicle.
+
+Since total quantity delivered is a decision variable to be maximised within maximal capacity of the vehicle, constraint (\ref{Q}) ensures that the total quantity delivered if city $i$ is the first city visited \textit{in the trip} is equal to the demand at $i$, otherwise if $i$ is not the first city delivered to, then the total quantity at $i$ must be less or equal to the maximal capacity of the vehicle (while is already stated in (\ref{Qleq})). That is (\ref{Q}), resets the total quantity variable at each trip to the demand of the first node visited within a new trip. 
+
+Constraint (\ref{incQ}) is a strictly increasing total quantity constraint. It states that if node $j$ follows node $i$, the total quantity delivered at $j$ must be the total quantity delivered at $i$ plus the demand at $j$. This constraint ensures that at each node successor node the total quantity delivered increases and that each `trip' is optimised.
+
 \begin{equation}\label{Q}
-q_{i} \leq C + (D_{i} - C) \times  p _{1,i} \quad, \forall i \in cities
+q_{i} \leq C + (D_{i} - C) \times  p _{1,i} \quad, \forall i \in cities\quad, i\neq1
 \end{equation}
 
 \begin{equation}\label{incQ}
-q_{j} \geq q_{i} + D_{i} - C + V*p_{i,j}  + (C-D_{j}-D_{i})*p_{j,i}
+q_{j} \geq q_{i} + D_{i} - C + C*p_{i,j}  + (C-D_{j}-D_{i})*p_{j,i}\quad, \forall i \in cities\quad, i,j \neq 1 \quad, i\neq j
 \end{equation}
 
-\begin{equation}
-q_{i} <= C \quad, \forall i
+\begin{equation}\label{Qleq}
+q_{i} <= C \quad, \forall i\quad, i\neq1
 \end{equation}
 
-\begin{equation}
-q_{i} >= D_{i} \quad, \forall i
+\begin{equation}\label{Qgeq}
+q_{i} >= D_{i} \quad, \forall i\quad, i\neq1
 \end{equation}
 
 
-\subsubsection{Alternative Subtour Breaking Constraint: Increasing Time/Distance}
+\subsubsection{Increasing Total Time Constraint}
+
+The concept behind the total time of delivery constraints (\ref{T}), (\ref{incT}) and (\ref{leqT})  is the same as that of the (\ref{Q}) and (\ref{incQ}) constraints for total quantity delivered. (\ref{T}) ensures that the total time delivering at $i$, if $i$ is a successor to the depot (node 1), is equal to the time taken to deliver to that node. Alternatively if $i$ is not a successor to the depot node, the total time of delivery at $i$ is less or equal to the hours available for delivering in a day. Constraint (\ref{leqT}) is therefore made redundant in this case. Both constraints ensure that the vehicle returns to the depot within the delivering time limit allocated (before the end of the working day). The strictly increasing delivering time constraint (\ref{incT}) ensures that the total time of delivery at $j$ is equal to the total time of delivery at $j$, plus the time taken to travel from $i$ to $j$.
+
 \begin{equation}\label{T}
-t_{i} \leq T + (D_{i} - C) \times  p _{1,i} \quad, \forall i \in cities
+T_{i} \leq H + (t_{1,i} - H) \times  p _{1,i} \quad, \forall i \in cities \quad, i\neq1
 \end{equation}
 
 \begin{equation}\label{incT}
-q_{j} \geq q_{i} + D_{i} - C + V*p_{i,j}  + (C-D_{j}-D_{i})*p_{j,i}
+T_{j} \geq T_{i} + t_{i,j} - H + H*p_{i,j}  + (H -  t_{i,j})p_{i,j} \quad, \forall i \in cities\quad, i,j \neq 1 \quad, i\neq j
 \end{equation}
 
-\begin{equation}
-q_{i} <= C \quad, \forall i
-\end{equation}
-
-\begin{equation}
-q_{i} >= D_{i} \quad, \forall i
+\begin{equation}\label{leqT}
+q_{i} <= H \quad, \forall i\quad, i\neq1
 \end{equation}
 
 
-\subsection{Optional Additional Constraints}
 \subsubsection{Number of times through the depot}
-\begin{equation}\label{eq2}
+Lastly, we present an optional constraint which forces the model to return a route solution with a given number of trips, or returns to the depot.
+
+\begin{equation}\label{eq13}
 \sum\limits_{i \in cities} p_{i,1} = n
 \end{equation}
 
 \begin{table}[h!]
 \centering
-\caption{My caption}
+\caption{List of Variables}
 \label{variables}
 \begin{tabular}{lll}
 \hline
@@ -216,29 +230,39 @@ Decision Variables & Symbol & Description \\
 \hline
 \hline
 Precedes & $p_{i,j}$  & Binary Variable - 1 if $i$ precedes $j$\\
-Quantity & $q_{i}$ & Quantity Delivered at $j$ \\
+Total Quantity & $q_{i}$ & Total Quantity Delivered at $j$ \\
+Total Time & $T_{i}$ & Total Time Delivering at $j$ \\ 
 \\
 \hline
 Variables & Symbol & Description \\
 \hline
 \hline
 Distance & $d_{i,j}$ & Distance from $i$ to $j$  \\
+Speed & $kmph_{i,j}$ & Average Constant Speed of Vehicle from $i$ to $j$\\
+Cost per hour & $cph$ & Cost per hour of delivering \\ 
+Fixed cost & $\bar{c}$ & Fixed Cost per stop \\
 Capacity & C & Capacity of vehicle \\ 
 Demand & $D_{i}$ & Demand / Quantity ordered at city $i$ \\  
+Hours & $H$ & Maximal Delivering Hours \\
+Travel Time & $t_{i,j}$ & Travel time from $i$ to $j$ \\ 
+Trips & $n$ & Number of Trips \\
 \end{tabular}
 \end{table}
 
-\subsubsection{Optional Constraints}
-
-%}
 \section{Mosel Model}
 
-%LOUIS{
-\subsection{Data}
+The Mosel model used in this report is an application of the mathematical model presented above. It was run using both real and generated data. A probabilistic component was added to the travel between nodes/cities.
 
 The city location and population data used to create the symmetric undirected graph of Irish cities was obtained from Tageo\footnote{\url{http://www.tageo.com/index-e-ei-cities-IE.htm}}. The data was cleaned in \texttt{python} and an adjacency matrix of the distance `by flight' between cities was calculated using the \textit{vincenty}\footnote{\url{https://geopy.readthedocs.io/en/1.10.0/}} distance (great-circle distance) from the \texttt{geopy} library.
 
-Demand for each city was calculated within \texttt{Xpress Mosel} as being proportional to the population of the city with an added random component.
+Demand for each city was calculated within \texttt{Xpress Mosel} as being proportional to the population of each city with an added random component. 
+
+To model the fact that travel time between two cities may be affected by traffic, we added a function which would assign different average speeds to different legs of the route. A node was given an 20\% chance of having an average speed of 60km/h and an 80\% chance of having a 100km/h average speed.
+
+A printing procedure was created which would output the total distance covered, quantity delivered and number of stop for each `trip'.
+
+
+
 
 \subsection{The model development process; what facilities/ features does the development environment
 have to aid model development and solution of your problem? }
@@ -317,8 +341,6 @@ have a significant impact on the field.}
 
 
 
-
-
 \clearpage
 \section*{Appendix - Results}
 
@@ -328,8 +350,11 @@ have a significant impact on the field.}
 
 \section*{Authorship}
 
-Louis Sections: Part of Mosel Implementation, 2,3 ,4.1,4.3,4.4
-
+Adedayo Adelowokan Contribution: 1, 3, 7 \\
+\newline
+Louis Carnec Contribution: Data Generation in python, 50\% of Mosel Implementation, sections; 2,4,5 \\
+\newline
+Vijay Katta Contribution: 50\% of Mosel implementation, generating results, sections; 6 \\
 
 
 \clearpage
