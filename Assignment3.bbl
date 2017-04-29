@@ -1,21 +1,37 @@
 \begin{thebibliography}{1}
 
+\bibitem{colombani2002mosel}
+{\sc Colombani, Y., and Heipcke, S.}
+\newblock Mosel: An extensible environment for modeling and programming
+  solutions.
+\newblock In {\em Proceedings of CP-AI-OR\/} (2002), vol.~2, pp.~277--290.
+
 \bibitem{cordeau2007vehicle}
 {\sc Cordeau, J.-F., Laporte, G., Savelsbergh, M.~W., and Vigo, D.}
 \newblock Vehicle routing.
 \newblock {\em Handbooks in operations research and management science 14\/}
   (2007), 367--428.
 
-\bibitem{el2010vehicle}
-{\sc El-Sherbeny, N.~A.}
-\newblock Vehicle routing with time windows: An overview of exact, heuristic
-  and metaheuristic methods.
-\newblock {\em Journal of King Saud University-Science 22}, 3 (2010), 123--131.
+\bibitem{dantzig1959truck}
+{\sc Dantzig, G.~B., and Ramser, J.~H.}
+\newblock The truck dispatching problem.
+\newblock {\em Management science 6}, 1 (1959), 80--91.
+
+\bibitem{gallmann2011linking}
+{\sc Gallmann, F., and Belvedere, V.}
+\newblock Linking service level, inventory management and warehousing
+  practices: A case-based managerial analysis.
+\newblock {\em Operations management research 4}, 1-2 (2011), 28--38.
 
 \bibitem{gueret1999applications}
 {\sc Gu{\'e}ret, C., Prins, C., and Sevaux, M.}
 \newblock Applications of optimization with xpress-mp.
 \newblock {\em contract\/} (1999), 00034.
+
+\bibitem{lenstra1981complexity}
+{\sc Lenstra, J.~K., and Kan, A.}
+\newblock Complexity of vehicle routing and scheduling problems.
+\newblock {\em Networks 11}, 2 (1981), 221--227.
 
 \bibitem{toth2002models}
 {\sc Toth, P., and Vigo, D.}

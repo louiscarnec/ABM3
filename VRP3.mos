@@ -7,7 +7,7 @@ model "VRP"
 	end-declarations 	
 	
 	 
-	initializations from "dist30.txt" !Initialise adjacency matrix from file . 5 cites : distsmall.txt 20 cities : distlatest20.txt , 30 cities : dist30.txt
+	initializations from "distsmall.txt" !Initialise adjacency matrix from file . 5 cites : distsmall.txt, 20 cities : distlatest20.txt , 30 cities : dist30.txt
 		citiesNum			
 	end-initializations	
 
@@ -27,13 +27,13 @@ model "VRP"
 		quantitydelivered: array(1..50) of real !total quantity delivered for trip
 		distancecovered: array(1..50) of real !total distance covered for trip
 		numberofstops: array(1..50) of integer !total number of stops for trip
-		TIMECAPACITY = 9 !maximal number of driving hours
+		TIMECAPACITY = 999999999 !maximal number of driving hours
 		KMH: array(cities,cities) of real!Average speed (constant)
 		cost_per_hour = 80	!Cost per hour in Euros, this is on top of fixed cost
 		fixed_cost_per_city = 20    !Fixed cost per delivery in euros
 	end-declarations
 
-	initializations from "dist30.txt" !Initialise from data file
+	initializations from "distsmall.txt" !Initialise from data file
 		POP
 		cityNames
 		DIST

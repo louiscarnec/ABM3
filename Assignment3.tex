@@ -17,6 +17,11 @@
 \usepackage{siunitx}
 \usepackage{float}
 \usepackage{eurosym}
+%external reference to pick references from pictures.tex. 
+%Note: This is does not bring the content of pictues.tex but for only ref. To import content use \input.
+\usepackage{xr}
+\externaldocument{pictues.tex}
+
 \usetikzlibrary{quotes,angles,positioning}
 \usepackage{standalone}
 \usepackage{multirow}
@@ -96,9 +101,7 @@ Adedayo \textsc{Adelowokan}
 
 \section{Introduction}
 %DAYO{
-The Vehicle Routing Problem (VRP) dates to the late 50s, although there has been nearly 60 years of research in this phenomenon, large-scale versions of this problem still pose a challenge for the scientific community. 
-
-The Vehicle Routing Problem tries to find a way to visit locations in a graph given a number of vehicles in a cost-effective way. The simplest definition states that every customer is visited by one vehicle, and each vehicle does one trip starting and ending at the depot. The problem involves finding in which order should customers be visited. 
+In the real-world companies are faced with problems regarding the transportation of goods, people or information. A couple of important challenges companies are faced with are finding ways to increase profits, reduce costs and further increase customer satisfaction. One of the many ways companies can save costs is in having an effective supply chain management which involves choosing distribution center locations or improving their delivery system. The choice of locations can reduce transportation costs, and reduce lead times. By reducing lead times, inventory control becomes easier which in turn increases service level \cite{gallmann2011linking}. The factors for choosing a location go beyond lead time and reduction of costs, factors like the surrounding community also have a significant effect. For example, the strength of the infrastructure (road etc.) surrounding the location, reliability, congestion and vulnerability. An area with a strong infrastructure that is further away could be more beneficial to an area that is closer with weak infrastructure. These are the type of factors that could affect the supply chain, in service level, costs etc. Improving the delivery system would also bring the same benefits as choosing the right location for a depot. In this case, a company would need a Vehicle Routing Problem (VRP) solution. VRP dates to the late 50s, although there has been nearly 60 years of research in this phenomenon large-scale versions of this problem still poses a challenge for the scientific community. Vehicle Routing Problem tries to find a way to visit several locations given a certain number of vehicles in a cost-effective way. The simplest definition states that every customer is visited by one vehicle, and each vehicle does one trip starting and ending at the depot. The question now is what order should customers be visited while ensuring that the various constraints are considered. This is the problem we will be addressing in this assignment.
 %}
 
 \section{Application: Goods Delivery}
@@ -116,10 +119,11 @@ We initially attempted to solve a slightly different version of the problem solv
 
 \section{Related Work}
 %DAYO{
-Combinatorial optimization problems have been studied in detail.  The Vehicle Routing Problem was initially introduced in 1959 \cite{dantzig1959truck}. The needs of the transportation industry were the motivation behind the problem, small improvements in efficiency could result in large economic gains. Routing problems always have an abundance of complex constraints and variables, this is evident in industry and our personal lives. Constraints specific to the industry include shift limits for drivers and specified arrival and delivery times. The widely-studied version of VRPs are often more simplistic, utilising fewer constraints. Simple versions with few nodes and few constraints still take relatively long to run.
+Combinatorial optimization problems have been studied in huge detail, the Vehicle Routing Problem was initially introduced in 1959 \cite{dantzig1959truck}. The needs of the transportation industry were the motivation behind the problem, especially realizing the amount of savings that could be made with small improvements in efficiency. Routing problems always have an abundance of complex constraints and variables, this is evident in the industry and our personal lives. These include traffic conditions, weather in certain situations, road-work etc. There are further constraints that would be specific to the industry which include shift limits for drivers, specified arrival and delivery times. The widely-studied version of VRPs are more simplistic, and utilize less constraints. The simpler versions still pose as a difficult task which shows how difficult it is to solve VRPs. 
+
 
 \subsection{Travelling Salesman Problem}
-The Travelling Salesman Problem (TSP) is one of the oldest known routing problems. It presents a salesman that has a specified number of cities to visit and needs to know the optimal order to visit these cities to minimise the distance needed to travel.
+The Travelling Salesman Problem (TSP) is one of the oldest known routing problems. It presents a salesman that has a specified number of cities to visit and needs to know the optimal order to visit these cities to minimize the distance needed to travel. TSP is an NP-hard problem \cite{lenstra1981complexity}.
 
 \subsection{Vehicle Routing Problem}
 VRP is also an NP-hard problem but it is safe to assume that the it iss a much harder problem to solve over TSP. VRP can be applied to various fields; logistics, communications, manufacturing, transportation, to list a few. In a VRP there are several vehicles that need to visit many customers. Vehicles starts at depot before visiting a section of the customers before returning to the starting depot. 
@@ -129,7 +133,7 @@ Like TSP, VRP is an NP-hard problem \cite{lenstra1981complexity} but it safe to 
 %}
 
 
-\subsection{How similar your problem is well-known solved cases}
+
 %LOUIS{
 \section{Mathematical Programming Model Formulation}
 
@@ -303,25 +307,34 @@ The theoretical principles demonstrated in our application come from \textit{net
 %}
 \section{Results}
 
-vehicle capacity constraint without time constraint
+We ran the \texttt{Xpress Mosel} model  to find the optimal vehicle route on datasets of different size - 5,  20 and 30 cities, for two different scenarios -1) With Capacity Constraint and No Time Constraint and 2) With Capacity and Time Constraint. The distance between any two cities remains same in either direction, but the speed of the vehicle can be different and the model takes this into consideration while finding the minimal cost route. First line of the output is the total transportation cost of the goods delivered in all the trips from the warehouse. Second line has five different columns - route of journey (from city -to city), distance between the cities in kilo meters , speed in kilo meters per hour, time in hours and finally quantity of goods delivered. Other statics such as quantity 
+delivered, distance covered and number of stops are for a given a trip from the central warehouse in Dublin. Executing each instance of 5 cities and 20 cities took less than a second and 30 cities took about 5 seconds. It is possible that the run time increases exponentially as the number of cities increases but for all practical purposes of delivering the goods the model works fine.
 
-both capacity and time constraint with time constraint
 
-random increase in cost
 
-\subsection{Tour length: mean, median,std}
+\subsection{With Capacity Constraint but No Time Constraint}
 
-\subsection{Time to find for n=?: mean, median, std}
+In the "5 cities" case we have 3 different executions of the model as shown in Figure \ref{fig:fig1} , Figure \ref{fig:fig2}  and Figure \ref{fig:fig3}. In each scenario total demand, generated randomly based on the population of the cities didn't exceed the maximum vehicle capacity of 1500 units.  All the orders can be fulfilled by one trip but it can be seen in Figure \ref{fig:fig1} that there are three different trips taken from Dublin delivering quantities of 187, 357 and 266 units, covering a total distance of 1296 kilo meters. There are three stops in trip1, five in trip2 and two in the last and final trip. It is obvious that the function is optimising the cost of delivery so the number of trips doesn't matter as loading charges and opening hours are not considered. It is interesting to note that last leg of journey in every trip has a quantity of zero as the model caters for only deliveries from the warehouse to client locations but no returns. In trip 3, though the distance is same from Dublin to Waterford and Waterford to Dublin, the time taken is 2.22 and 1.32 hours as the speed is different in each direction.\\
 
+Scenario 2 (Figure \ref{fig:fig2}) differs from scenario 1 (Figure \ref{fig:fig1}) and scenario 3 (Figure \ref{fig:fig3}) in terms of the number of trips taken. There is only one trip costing 640 euros covering a distance of 675 kilo metes , delivering 340 units of goods to 5 different cities. 
+Figure \ref{fig:20fig1} , Figure \ref{fig:20fig2}  and Figure \ref{fig:20fig3} are the results of applying the model on dataset with 20 cities, each with vehicle capacity constraint of 4000 units. Higher demand of 252 units in Figure \ref{fig:20fig1} can be attributed to the random demand based on the population of Cork city. Output from Run1, Run2 and Run3 of this dataset shows that cost efficient way of fulfilling the demand is by one trip covering all the cities.
+Examining the reason as to why only one trip is optimal rather than multiple trips to warehouse, it can be concluded that model needs additional constraints such as road types, connectivity on top of existing distance and speed.\\
+
+Cost optimal vehicle routing path based on 30 cities/towns dataset is shown in Figure \ref{fig:30fig1}, Figure \ref{fig:30fig2} and Figure \ref{fig:30fig3}. Unlike the previous results using 5 cities and 20 cities, the output generated here in each instance of the run is different for each other. Figure \ref{fig:30fig1} shows that first trip covers 26 cites/towns delivering 818 units covering 1235 kilo meters with two journeys having 60 kilo meter per hour speed and second trip delivers to 5 cities. In reality not all deliveries are of same priority, but the we haven't modelled that component in so next location from a given city is based on distance and speed.  
+
+\subsection{With Capacity Constraint and Time Constraint}
+
+The only difference in this case is that there is an additional time constraint of 9 hours on top of the capacity constraint of a goods delivery van. It means a vehicle's onward and return journey time from and to the warehouse cannot exceed 9 hours in a single trip. Figures \ref{fig:fig4}, Figures \ref{fig:20fig4} and Figures \ref{fig:30fig4} shows the output of running the model with both constraints enable on datasets with 5, 20 and 30 nodes.
+
+
+Exceptional cases such as order sizes greater than capacity of a delivery van are not handled but can added to the model if need. 
 \section{Conlusion/Recommendations}
 
-\subsection{The dependence on Software}
-\textbf{Whether you agree with the statement above : In OR practice and research, software is fundamental. The dependence
+\subsection*{The dependence on Software}
+\textit{ In OR practice and research, software is fundamental. The dependence
 of OR on software implies that the ways in which software is developed, managed, and distributed can
-have a significant impact on the field.}
-
-
-
+have a significant impact on the field.}\\
+The above statement can be equally applied to Analytical Business Modelling (ABM). The ability to create software to address some of the problems we encountered is very advantageous as trying to solve some of the problems using the simplex tableau would be much more difficult. Utilizing software allows for the problem types to be more complex, this is evident in ABM as we can utilize different solvers, choosing one that is more suitable in our Mosel model to solve our problems. The inclusion of a debugger in Mosel, allows the developer/model creator to see locations where errors arise \cite{colombani2002mosel}.The way the software is managed also could also have an impact as making solutions that are reusable with minimum modification to solve a separate problem. For example, creating procedures that are common to many problem types, that way that one procedure can be used when solve those types of problems. This is important as having to rewrite code will prove to be a waste of time when they can be reused. Mosel also allows for the utilization of libraries which can lead to novel approaches been found out and implemented \cite{colombani2002mosel}.How the software is distributed can have an impact on the field, especially if the software if it's one that isn't native all operating systems. Also, the limitation in the available licenses proved to be a limitation, with the student license the max amount of points was 30. This can prove to limitation as there isn't the ability to further test your solution.In other words, we agree with this statement, how software is developed, managed and distributed can have a significant impact on ABM, in some cases positive and others negative. 
 
 
 
@@ -355,11 +368,11 @@ have a significant impact on the field.}
 
 \section*{Authorship}
 
-Adedayo Adelowokan Contribution: 1, 3, 7 \\
+Adedayo Adelowokan Contribution: Started development on the very first Mosel model before the problem was changed, also offered insights into the new Mosel Model. Sections: 1, 3, 7 \\
 \newline
-Louis Carnec Contribution: Data Generation in python, 50\% of Mosel Implementation, sections; 2,4,5 \\
+Louis Carnec Contribution: Problem research original and final one, Data Generation in python, 50\% of Mosel Implementation, sections; 2,4,5 \\
 \newline
-Vijay Katta Contribution: 50\% of Mosel implementation, generating results, sections; 6 \\
+Vijay Katta Contribution: Started research on identifying the problem and changing the original one, 50\% of Mosel implementation, generating the results, sections; 6 \\
 
 
 \clearpage

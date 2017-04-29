@@ -1,0 +1,329 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.2.25)  29 APR 2017 12:34
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**pictures.tex
+(./pictures.tex
+LaTeX2e <2016/03/31>
+Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
+(/usr/local/texlive/2016/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2016/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2016/02/04 v1.7-139 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 67.
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+\captionmargin=\dimen103
+\captionmargin@=\dimen104
+\captionwidth=\dimen105
+\caption@tempdima=\dimen106
+\caption@indent=\dimen107
+\caption@parindent=\dimen108
+\caption@hangindent=\dimen109
+)
+\c@ContinuedFloat=\count87
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2016/02/20 v1.1-142 Sub-captions (AR)
+\c@subfigure=\count88
+\c@subtable=\count89
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count90
+\float@exts=\toks15
+\float@box=\box26
+\@float@everytoks=\toks16
+\@floatcapt=\box27
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/subfig/subfig.sty
+Package: subfig 2005/06/28 ver: 1.3 subfig package
+\c@KVtest=\count91
+\sf@farskip=\skip43
+\sf@captopadj=\dimen110
+\sf@capskip=\skip44
+\sf@nearskip=\skip45
+\sf@top=\skip46
+\sf@bottom=\skip47
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2016/05/09 v1.0r Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/01/02 v1.10 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 96.
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+(/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
+)
+(/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count92
+))
+\Gin@req@height=\dimen111
+\Gin@req@width=\dimen112
+)
+
+LaTeX Warning: Unused global option(s):
+    [a4paper&11pt].
+
+(./pictures.aux)
+\openout1 = `pictures.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: subfig package v1.3 is loaded.
+Package caption Info: float package is loaded.
+Package caption Info: End \AtBeginDocument code.
+
+(/usr/local/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count93
+\scratchdimen=\dimen113
+\scratchbox=\box28
+\nofMPsegments=\count94
+\nofMParguments=\count95
+\everyMPshowfont=\toks17
+\MPscratchCnt=\count96
+\MPscratchDim=\dimen114
+\MPnumerator=\count97
+\makeMPintoPDFobject=\count98
+\everyMPtoPDFconversion=\toks18
+) (/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2016/05/10 v0.21 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2016/05/14 v3.1 Provides the ifpdf switch
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+
+(/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
+))
+(/usr/local/texlive/2016/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+
+(/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+
+(/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 456.
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+<fig1.png, id=1, 536.0025pt x 342.27875pt>
+File: fig1.png Graphic file (type png)
+ <use fig1.png>
+Package pdftex.def Info: fig1.png used on input line 21.
+(pdftex.def)             Requested size: 428.80258pt x 273.82335pt.
+
+Overfull \hbox (83.80258pt too wide) in paragraph at lines 21--25
+ [] 
+ []
+
+<fig2.png, id=3, 528.97626pt x 162.6075pt>
+File: fig2.png Graphic file (type png)
+ <use fig2.png>
+Package pdftex.def Info: fig2.png used on input line 30.
+(pdftex.def)             Requested size: 423.18158pt x 130.08617pt.
+
+Overfull \hbox (78.18158pt too wide) in paragraph at lines 30--34
+ [] 
+ []
+
+<fig3.png, id=4, 549.05125pt x 257.96375pt>
+File: fig3.png Graphic file (type png)
+ <use fig3.png>
+Package pdftex.def Info: fig3.png used on input line 38.
+(pdftex.def)             Requested size: 439.2416pt x 206.37126pt.
+
+Overfull \hbox (94.2416pt too wide) in paragraph at lines 38--42
+ [] 
+ []
+
+[1
+
+{/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./fig1.
+png> <./fig2.png>] <fig4.png, id=14, 537.00626pt x 367.3725pt>
+File: fig4.png Graphic file (type png)
+
+<use fig4.png>
+Package pdftex.def Info: fig4.png used on input line 48.
+(pdftex.def)             Requested size: 429.60559pt x 293.89838pt.
+
+Overfull \hbox (84.60559pt too wide) in paragraph at lines 48--52
+ [] 
+ []
+
+[2 <./fig3.png>] <20fig1.png, id=19, 529.98pt x 371.3875pt>
+File: 20fig1.png Graphic file (type png)
+ <use 20fig1.png>
+Package pdftex.def Info: 20fig1.png used on input line 59.
+(pdftex.def)             Requested size: 423.98456pt x 297.1104pt.
+
+Overfull \hbox (78.98456pt too wide) in paragraph at lines 59--63
+ [] 
+ []
+
+[3 <./fig4.png>] <20fig2.png, id=24, 549.05125pt x 366.36874pt>
+File: 20fig2.png Graphic file (type png)
+
+<use 20fig2.png>
+Package pdftex.def Info: 20fig2.png used on input line 68.
+(pdftex.def)             Requested size: 439.2416pt x 293.09538pt.
+
+Overfull \hbox (94.2416pt too wide) in paragraph at lines 68--72
+ [] 
+ []
+
+[4 <./20fig1.png>] <20fig3.png, id=29, 547.04375pt x 372.39125pt>
+File: 20fig3.png Graphic file (type png)
+
+<use 20fig3.png>
+Package pdftex.def Info: 20fig3.png used on input line 76.
+(pdftex.def)             Requested size: 437.63559pt x 297.91339pt.
+
+Overfull \hbox (92.63559pt too wide) in paragraph at lines 76--80
+ [] 
+ []
+
+[5 <./20fig2.png>] <20fig4.png, id=34, 304.13625pt x 597.23125pt>
+File: 20fig4.png Graphic file (type png)
+
+<use 20fig4.png>
+Package pdftex.def Info: 20fig4.png used on input line 86.
+(pdftex.def)             Requested size: 243.30933pt x 477.78564pt.
+ [6 <./20fig3.png>]
+<30fig1.png, id=39, 600.2425pt x 581.17125pt>
+File: 30fig1.png Graphic file (type png)
+ <use 30fig1.png>
+Package pdftex.def Info: 30fig1.png used on input line 96.
+(pdftex.def)             Requested size: 480.19464pt x 464.93764pt.
+
+Overfull \hbox (135.19464pt too wide) in paragraph at lines 96--100
+ [] 
+ []
+
+[7 <./20fig4.png>] [8 <./30fig1.png>]
+<30fig2.png, id=49, 584.1825pt x 512.91624pt>
+File: 30fig2.png Graphic file (type png)
+ <use 30fig2.png>
+Package pdftex.def Info: 30fig2.png used on input line 105.
+(pdftex.def)             Requested size: 467.34662pt x 410.33356pt.
+
+Overfull \hbox (122.34662pt too wide) in paragraph at lines 105--109
+ [] 
+ []
+
+<30fig3.png, id=50, 588.1975pt x 635.37375pt>
+File: 30fig3.png Graphic file (type png)
+ <use 30fig3.png>
+Package pdftex.def Info: 30fig3.png used on input line 113.
+(pdftex.def)             Requested size: 470.55864pt x 508.29968pt.
+
+Overfull \hbox (125.55864pt too wide) in paragraph at lines 113--117
+ [] 
+ []
+
+[9 <./30fig2.png>] <30fig4.png, id=55, 586.19pt x 440.64626pt>
+File: 30fig4.png Graphic file (type png)
+
+<use 30fig4.png>
+Package pdftex.def Info: 30fig4.png used on input line 123.
+(pdftex.def)             Requested size: 468.95264pt x 352.51747pt.
+
+Overfull \hbox (123.95264pt too wide) in paragraph at lines 123--127
+ [] 
+ []
+
+[10 <./30fig3.png>] [11 <./30fig4.png>] (./pictures.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 2807 strings out of 493014
+ 44668 string characters out of 6133351
+ 98477 words of memory out of 5000000
+ 6340 multiletter control sequences out of 15000+600000
+ 4850 words of font info for 18 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 37i,5n,39p,234b,314s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+Output written on pictures.pdf (11 pages, 1606222 bytes).
+PDF statistics:
+ 73 PDF objects out of 1000 (max. 8388607)
+ 33 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 61 words of extra memory for PDF output out of 10000 (max. 10000000)
+

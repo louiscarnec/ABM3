@@ -1,0 +1,46 @@
+model transport
+ uses "mmxprs"
+
+ declarations
+  REGION: set of string                 ! Set of customer regions
+  PLANT: set of string                  ! Set of plants
+
+  DEMAND: array(REGION) of real         ! Demand at regions
+  PLANTCAP: array(PLANT) of real        ! Production capacity at plants
+  PLANTCOST: array(PLANT) of real       ! Unit production cost at plants
+  TRANSCAP: dynamic array(PLANT,REGION) of real
+                                        ! Capacity on each route plant->region
+  DISTANCE: dynamic array(PLANT,REGION) of real
+                                        ! Distance of each route plant->region
+  FUELCOST: real                        ! Fuel cost per unit distance
+
+  flow: dynamic array(PLANT,REGION) of mpvar    ! Flow on each route
+ end-declarations
+ 
+ initializations from 'transprt.dat'
+  DEMAND
+  [PLANTCAP,PLANTCOST] as 'PLANTDATA'
+  [DISTANCE,TRANSCAP] as 'ROUTES'
+  FUELCOST
+ end-initializations
+ 
+! Create the flow variables that exist
+ forall(p in PLANT, r in REGION | exists(TRANSCAP(p,r)) ) create(flow(p,r))
+ 
+! Objective: minimize total cost
+ MinCost:= sum(p in PLANT, r in REGION | exists(flow(p,r))) 
+            (FUELCOST * DISTANCE(p,r) + PLANTCOST(p)) * flow(p,r)
+ 
+! Limits on plant capacity
+ forall(p in PLANT) sum(r in REGION) flow(p,r) <= PLANTCAP(p)</p>
+
+! Satisfy all demands
+ forall(r in REGION) sum(p in PLANT) flow(p,r) = DEMAND(r)
+ 
+! Bounds on flows
+ forall(p in PLANT, r in REGION | exists(flow(p,r))) 
+  flow(p,r) <= TRANSCAP(p,r)
+ 
+ minimize(MinCost)                       ! Solve the problem
+ 
+end-model
