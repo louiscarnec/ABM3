@@ -1,0 +1,139 @@
+!@encoding CP1252
+model "VRP"
+	uses "mmxprs"
+
+	declarations !declaring for initializations
+		citiesNum: integer !number of cities in the graph
+	end-declarations 	
+	
+	 
+	initializations from "dist30.txt" !Initialise adjacency matrix from file . 5 cites : distsmall.txt 20 cities : distlatest20.txt , 30 cities : dist30.txt
+		citiesNum			
+	end-initializations	
+
+	declarations
+		cities = 1..citiesNum !fixed size array of cities
+		citiestovisit = 2..citiesNum !nodes to visit (customers) from 2 to n
+		cityNames : array(cities) of string !name of cities in the graph
+		DIST : array(cities, cities) of real !adacency matrix - edge weights
+		POP: array(cities) of real !population per city
+		demand: array(cities) of real !demand array per city
+		VCAPACITY: integer !vehicle maximal capacity
+		
+		move : array(cities, cities) of mpvar !decision variable: whether to move from i to j
+		totalq : array(citiestovisit) of mpvar !decision variable: quantity delivered up to node i
+		totaltime:array(citiestovisit) of mpvar !decision variable: time spent travelling/transporting up to node i
+		
+		quantitydelivered: array(1..50) of real !total quantity delivered for trip
+		distancecovered: array(1..50) of real !total distance covered for trip
+		numberofstops: array(1..50) of integer !total number of stops for trip
+		TIMECAPACITY = 9 !maximal number of driving hours
+		KMH: array(cities,cities) of real!Average speed (constant)
+		cost_per_hour = 80	!Cost per hour in Euros, this is on top of fixed cost
+		fixed_cost_per_city = 20    !Fixed cost per delivery in euros
+	end-declarations
+
+	initializations from "dist30.txt" !Initialise from data file
+		POP
+		cityNames
+		DIST
+		VCAPACITY
+	end-initializations
+	
+	
+	!create demand based on population of city + random
+	forall(i in citiestovisit)demand(i) := round((POP(i)/1000)+(random-0.5)*((POP(i)/1000)))
+	!forall(i in citiestovisit)demand(i) := 50
+	
+	
+	!Decrease KMH per hour on randomly chosen route
+	forall(i,j in cities |i<>j) do
+   		if random > 0.8 then
+    			KMH(i,j) := 60
+		else
+			KMH(i,j) := 100
+   		end-if
+	end-do
+	
+
+	!Objective Function: Cost function where cost is a product of distance covered multiplied by time per hour plus cost of stopping at a city
+	cost := sum(i,j in cities | i<>j) ((DIST(i,j)/KMH(i,j))*cost_per_hour + fixed_cost_per_city) *move(i,j)
+	
+	!Visit every city once !Taken from Gueret et al. Applications of Optimization with Xpress-MP section 10.4
+	forall(j in citiestovisit) sum(i in cities | i<>j) move(i,j)=1
+	forall(i in citiestovisit) sum(j in cities | i<>j) move(i,j)=1
+	
+
+	!if i first city in tour: total quantity delivered = demand from city
+	forall(i in citiestovisit) totalq(i) <= VCAPACITY + (demand(i) - VCAPACITY)*move(1,i)
+	
+	
+	!strictly increasing quant
+	forall(i,j in citiestovisit | i<>j) totalq(j) >= totalq(i) + demand(j) - VCAPACITY + VCAPACITY*move(i,j) + (VCAPACITY - demand(j) - demand(i))*move(j,i)
+	
+	
+	!upper and lower bound on quantity
+	forall(i in citiestovisit) do
+		totalq(i) <= VCAPACITY
+		totalq(i) >= demand(i)
+	end-do
+	
+
+	! if i first city in tour: total time = distance to city
+	forall(i in citiestovisit) totaltime(i) <= TIMECAPACITY + ( (DIST(1,i)/KMH(1,i)) -TIMECAPACITY) * move(1,i)
+	
+	
+	!strictly increasing time
+	forall(i,j in citiestovisit |i<>j) totaltime(j) >= totaltime(i) + (DIST(i,j)/KMH(i,j)) - TIMECAPACITY + TIMECAPACITY*move(i,j) + (TIMECAPACITY - (DIST(j,i)/KMH(i,j)))*move(j,i)
+	
+	!upper bound time
+	forall(i in citiestovisit)do
+		totaltime(i) <= TIMECAPACITY
+	end-do	
+	
+	!decision variable is binary
+	forall(i,j in cities | i<>j) move(i,j) is_binary
+	
+	procedure printTrips !printing procedure: shows each trip (from depot to depot)
+
+
+	writeln("============")
+	 writeln("Cost of Goods Delivery (All Trips) : ", getobjval, " Euros ")
+	writeln(" From(City) - To (City)    |", strfmt("Distance(KM)",6),"|", strfmt("Speed(KMH)",6),"|", strfmt("Time(Hours)",6),"|", strfmt("Quantity",6))
+	writeln("------------------------------------------------------------------------")
+	 forall(i in citiestovisit)
+	  if(getsol(move(1,i))>0) then
+	   ct:=demand(i)
+	   distancesub:=DIST(1,i)
+	   stops:=1
+	   writeln(strfmt( cityNames(1),-15), " -> ", strfmt( cityNames(i),-15), " | ", strfmt( integer(DIST(1,i)),10), " |  ", strfmt( KMH(1,i),7), " |  ", strfmt( DIST(1,i)/KMH(1,i),8,2) , " |  ", strfmt( demand(i),6))
+	   p:=i
+	   while(p<>1) do
+	    n:= integer(round(sum(j in cities) j*getsol(move(p,j))))
+	    distpn:=DIST(p,n)
+	    if (distpn=0)then
+	    	distpn:=DIST(n,p)
+	    end-if
+	   writeln(strfmt( cityNames(p),-15), " -> ", strfmt( cityNames(n),-15), " | ", strfmt( DIST(p,n),10), " |  ", strfmt( KMH(p,n),7), " |  ", strfmt( DIST(p,n)/KMH(p,n),8,2) , " |  ", strfmt( demand(n),6))	
+	    ct+=demand(n)
+	    distancesub+=distpn
+	    p:=n
+	    stops+=1
+	   end-do
+	   writeln("Quantity Delivered     : ", ct)
+	   writeln("Distance Covered       : ", distancesub)
+	   writeln("Number of Stops in Trip: ", stops)
+	   writeln("---TRIP-—")
+	   trips+=1
+	   quantitydelivered(trips):= ct
+	   distancecovered(trips) := distancesub
+	   numberstops(trips) := stops
+	  end-if
+	end-procedure
+	
+	
+	minimise(cost) !minimise the objective function
+	printTrips
+	
+		
+end-model
