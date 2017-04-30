@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.2.25)  29 APR 2017 16:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.2.25)  30 APR 2017 08:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1271,7 +1271,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 160--164
+Underfull \hbox (badness 10000) in paragraph at lines 170--174
 
  []
 
@@ -1289,11 +1289,13 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [5]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 267.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 267.
 
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 277.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 277.
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 38.82321pt.
@@ -1315,10 +1317,6 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [8]
-Underfull \hbox (badness 10000) in paragraph at lines 323--324
-
- []
-
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 38.82321pt.
@@ -1326,12 +1324,12 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [9]
-Underfull \hbox (badness 10000) in paragraph at lines 325--328
+Underfull \hbox (badness 10000) in paragraph at lines 333--334
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 342--343
+Underfull \hbox (badness 10000) in paragraph at lines 335--338
 
  []
 
@@ -1342,6 +1340,10 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [10]
+Underfull \hbox (badness 10000) in paragraph at lines 352--353
+
+ []
+
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 38.82321pt.
@@ -1536,20 +1538,6 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [21 <./30fig3.png>])
-Underfull \hbox (badness 10000) in paragraph at lines 384--390
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 384--390
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 384--390
-
- []
-
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 38.82321pt.
@@ -1557,13 +1545,29 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [22 <./30fig4.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 395--401
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 395--401
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 395--401
+
+ []
+
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 38.82321pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[23] (./Assignment3.bbl)
+[23
+
+] (./Assignment3.bbl)
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 38.82321pt.
@@ -1574,10 +1578,10 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 
 ] (./Assignment3.aux) ) 
 Here is how much of TeX's memory you used:
- 27322 strings out of 493014
- 555559 string characters out of 6133351
- 544540 words of memory out of 5000000
- 30394 multiletter control sequences out of 15000+600000
+ 27326 strings out of 493014
+ 555641 string characters out of 6133351
+ 546554 words of memory out of 5000000
+ 30398 multiletter control sequences out of 15000+600000
  71891 words of font info for 52 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  55i,12n,80p,10380b,834s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1601,7 +1605,7 @@ exlive/2016/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/201
 6/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2016/texmf-dis
 t/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2016/texmf-dist/fonts/ty
 pe1/public/lm/lmtt9.pfb>
-Output written on Assignment3.pdf (25 pages, 1852818 bytes).
+Output written on Assignment3.pdf (25 pages, 1856701 bytes).
 PDF statistics:
  184 PDF objects out of 1000 (max. 8388607)
  115 compressed objects within 2 object streams

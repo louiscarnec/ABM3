@@ -1,4 +1,17 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{amorim2014rich}
+{\sc Amorim, P., Parragh, S.~N., Sperandio, F., and Almada-Lobo, B.}
+\newblock A rich vehicle routing problem dealing with perishable food: a case
+  study.
+\newblock {\em Top 22}, 2 (2014), 489--508.
+
+\bibitem{boonsam2011assignment}
+{\sc Boonsam, P., Suthikarnnarunai, N., and Chitphaiboon, W.}
+\newblock Assignment problem and vehicle routing problem for an improvement of
+  cash distribution.
+\newblock In {\em Proceedings of the World Congress on Engineering and Computer
+  Science\/} (2011), vol.~2, pp.~1160--1164.
 
 \bibitem{colombani2002mosel}
 {\sc Colombani, Y., and Heipcke, S.}
@@ -32,6 +45,17 @@
 {\sc Lenstra, J.~K., and Kan, A.}
 \newblock Complexity of vehicle routing and scheduling problems.
 \newblock {\em Networks 11}, 2 (1981), 221--227.
+
+\bibitem{psaraftis1980dynamic}
+{\sc Psaraftis, H.~N.}
+\newblock A dynamic programming solution to the single vehicle many-to-many
+  immediate request dial-a-ride problem.
+\newblock {\em Transportation Science 14}, 2 (1980), 130--154.
+
+\bibitem{teodorovic2000fuzzy}
+{\sc Teodorovic, D., and Radivojevic, G.}
+\newblock A fuzzy logic approach to dynamic dial-a-ride problem.
+\newblock {\em Fuzzy sets and systems 116}, 1 (2000), 23--33.
 
 \bibitem{toth2002models}
 {\sc Toth, P., and Vigo, D.}
